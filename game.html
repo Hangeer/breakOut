@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="screen-orientation" content="portrait">
+    <title>突出重围</title>
+    <script src="./js/zepto.js"></script>
+    <!--<script src="./js/phaser.min.js"></script>-->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        html, body{
+            height: 100%;
+            position: relative;
+            margin: 0;
+            overflow: hidden;
+            -webkit-user-select:none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body{
+            background-color: #000018;
+            font-family: 'Microsoft YaHei';
+        }
+        .stage {
+            width: 320px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="stage" class="stage">
+            <canvas id="canvas" height="568" width="320"></canvas>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function (ev) {
+            var ev = ev || window.event;
+            ev.preventDefault;
+            /* 阻止默认事件 */
+
+            var public = {};
+            public.canvas = document.getElementById('canvas');
+            public.context = canvas.getContext('2d');
+
+            function Soldier () {
+                var self = this;
+                    self.width = 30;
+                    self.height = 30;
+                    self.top = 350;
+                    self.left = 145;
+                    self.timer = null;
+                    self.speed = 1;
+
+            }
+            Soldier.prototype.paint = function (ctx) {
+                ctx.fillStyle = "#fff";
+                ctx.fillRect(this.left, this.top, this.width, this.height);
+            };
+            Soldier.prototype.move = function (ctx) {
+                this.speed = 1;
+                ctx.clearRect(this.left, this.top, this.width, this.height);
+                this.top -= 50;
+                ctx.fillRect(this.left, this.top, this.width, this.height);
+
+            };
+            Soldier.prototype.down = function (ctx) {
+                var acc = 1.1;
+                this.speed = Math.ceil(acc*this.speed);
+//                console.log(this.speed);
+
+                ctx.clearRect(this.left, this.top, this.width, this.height);
+                this.top += this.speed;
+                ctx.fillRect(this.left, this.top, this.width, this.height);
+                this.isEnd(ctx);
+            };
+            Soldier.prototype.isEnd = function (ctx) {
+                if (this.top > 600) {
+                    console.log("over");
+                    window.clearInterval(timer);
+                }
+            };
+
+//            function Circle (x, y, r, startDeg, arc) {
+//                var self = this;
+//                    self.centerX = x;
+//                    self.centerY = y;
+//                    self.radius = r;
+//                    self.startDegree = startDeg;
+//                    self.arc = arc;
+//            }
+//            Circle.prototype.draw = function (ctx) {
+//                ctx.beginPath();
+//                ctx.arc(this.centerX, this.centerY, this.radius, this.startDegree, this.arc);
+//                ctx.strokeStyle = "#fff";
+//                ctx.stroke();
+//            };
+
+            public.context.beginPath();
+            public.context.arc(150, 100, 100, 0 , 1.5*Math.PI);
+            public.context.strokeStyle = "#fff";
+            public.context.stroke();
+
+
+            var soldier = new Soldier();
+            soldier.paint(public.context);
+
+            var timer = window.setInterval(function () {
+                soldier.down(public.context);
+            }, 40);
+
+            $(document).on('touchstart', function () {
+                soldier.move(public.context);
+            });
+
+            /*
+            *   思路: 每次方块运动的时候保存几个点的坐标
+            *           重绘的时候检测点坐标是否在某个区域内部
+            *   或者保存点,判断点之间的距离
+            *   用图片试一下
+            * */
+
+        });
+    </script>
+</body>
+</html>
