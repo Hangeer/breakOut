@@ -113,6 +113,7 @@
             self.radius = r;
             self.startDeg = startDeg;
             self.arc = arc;
+            self.lineWidth = 5;
 
             self.rotateDeg = 0;
             self.count = 0;
@@ -120,19 +121,19 @@
             self.bottomStart = 30;
             self.bottomEnd = 65;
             self.statusBottom = true;
-            self.bottomPos = [160, 255];
+            self.bottomPos = [160, self.centerX + self.radius - self.lineWidth];
 
             self.topStart = 90;
             self.topEnd = 124;
             self.statusTop = true;
-            self.topPos = [160, 55];
+            self.topPos = [160, self.centerX - self.radius - self.lineWidth];
 
         };
         Circle.prototype.paint = function () {
             var ctx = this.context;
             ctx.beginPath();
             ctx.arc(this.centerX, this.centerY, this.radius, this.startDeg, this.arc);
-            ctx.lineWidth = 5;
+            ctx.lineWidth = this.lineWidth;
             ctx.strokeStyle = "#fff";
             ctx.stroke();
         };
@@ -150,7 +151,6 @@
                 this.count = 0;
             }
 
-//            console.log(this.count);
             if(this.count >= this.bottomStart && this.count <= this.bottomEnd) {
                 this.statusBottom = false;
             } else {
@@ -199,7 +199,6 @@
 
             $(document).on('touchstart', function () {
                 soldier.jump();
-//                console.log(soldier.returnTop());
                 stage.up(soldier.returnTop());
             });
 
@@ -230,7 +229,13 @@
 
         stage.start();
 
-
+        /*
+        *   争取周五之前把几种可行的形状搞出来
+        *   有缺口的圆形
+        *   试试方形,用三角函数应该可以判断位置
+        *   左右移动的方块
+        *   有时间的话,把素材替换成图片
+        * */
     });
 </script>
 </body>
