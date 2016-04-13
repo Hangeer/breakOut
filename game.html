@@ -54,7 +54,6 @@
                     self.left = 145;
                     self.timer = null;
                     self.speed = 1;
-
             }
             Soldier.prototype.paint = function (ctx) {
                 ctx.fillStyle = "#fff";
@@ -68,19 +67,29 @@
 
             };
             Soldier.prototype.down = function (ctx) {
-                var acc = 1.1;
+                var acc = 1.05;
                 this.speed = Math.ceil(acc*this.speed);
-//                console.log(this.speed);
-
                 ctx.clearRect(this.left, this.top, this.width, this.height);
                 this.top += this.speed;
                 ctx.fillRect(this.left, this.top, this.width, this.height);
+//                console.log(ctx.isPointInPath(200, 145));
+                this.collision([145, 185]);
+                console.log("pos: " + this.top + " " + this.left);
                 this.isEnd(ctx);
             };
             Soldier.prototype.isEnd = function (ctx) {
                 if (this.top > 600) {
                     console.log("over");
                     window.clearInterval(timer);
+                }
+            };
+            Soldier.prototype.collision = function (point) {
+                var x = point[0];
+                var y = point[1];
+                var r = 5;
+                if ( Math.pow(this.top - y, 2) + Math.pow(this.left - x, 2) <= Math.pow(r, 2)) {
+                    window.clearInterval(timer);
+                    console.log("yaerma");
                 }
             };
 
@@ -98,11 +107,14 @@
 //                ctx.strokeStyle = "#fff";
 //                ctx.stroke();
 //            };
+//            Cilcle.prototype.move = function (ctx) {
+//
+//            };
 
-            public.context.beginPath();
-            public.context.arc(150, 100, 100, 0 , 1.5*Math.PI);
-            public.context.strokeStyle = "#fff";
-            public.context.stroke();
+//            public.context.beginPath();
+//            public.context.arc(150, 100, 100, 0 , 1.5*Math.PI);
+//            public.context.strokeStyle = "#fff";
+//            public.context.stroke();
 
 
             var soldier = new Soldier();
@@ -121,6 +133,8 @@
             *           重绘的时候检测点坐标是否在某个区域内部
             *   或者保存点,判断点之间的距离
             *   用图片试一下
+            *
+            *   判断某一时间内,小方块能经过那个路径
             * */
 
         });

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="screen-orientation" content="portrait">
+    <title>突出重围</title>
+    <script src="./js/zepto.js"></script>
+    <!--<script src="./js/phaser.min.js"></script>-->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        html, body{
+            height: 100%;
+            position: relative;
+            margin: 0;
+            overflow: hidden;
+            -webkit-user-select:none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body{
+            background-color: #000018;
+            font-family: 'Microsoft YaHei';
+        }
+        .stage {
+            width: 320px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="stage" class="stage">
+        <canvas id="canvas" height="568" width="320"></canvas>
+    </div>
+</div>
+<script>
+    $(document).ready(function (ev) {
+        var ev = ev || window.event;
+        ev.preventDefault;
+        /* 阻止默认事件 */
+
+        var public = {
+            canvas: document.getElementById('canvas'),
+            context: canvas.getContext('2d'),
+            timer: null,
+            stopTimer: function () {
+                window.clearInterval(this.timer);
+            }
+        };
+        var Soldier = function () {
+            var self = this;
+                self.width = 20;
+                self.height = 20;
+                self.top = 400;
+                self.left = 150;
+                self.timer = null;
+                self.speed = 1;
+                self.t = 0;
+                self.context = public.context;
+        };
+        Soldier.prototype.paint = function () {
+            var ctx = this.context;
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(this.left, this.top, this.width, this.height);
+        };
+        Soldier.prototype.jump = function () {
+            var ctx = this.context;
+            this.speed = -10;
+            this.t = 0;
+            ctx.clearRect(this.left, this.top, this.width, this.height);
+            ctx.fillRect(this.left, this.top, this.width, this.height);
+        };
+        Soldier.prototype.down = function () {
+            var ctx = this.context;
+            var acc = 0.1;
+            this.t += 0.01;
+            this.speed = Math.ceil(this.speed + acc * this.t);
+            ctx.clearRect(this.left, this.top, this.width, this.height);
+            this.top += this.speed;
+            ctx.fillRect(this.left, this.top, this.width, this.height);
+            this.isEnd(ctx);
+        };
+        Soldier.prototype.isEnd = function () {
+            if (this.top > 600) {
+                console.log("game over");
+                public.stopTimer();
+            }
+        };
+        Soldier.prototype.collision = function (point, status) {
+            var x = point[0];
+            var y = point[1];
+            var r = 5;
+            var center = [this.left+this.width, this.top+this.height];
+            if (status && Math.pow(center[0]-x, 2) + Math.pow(center[1]-y, 2) <= Math.pow(r, 2)) {
+                console.log("Collision");
+                public.stopTimer();
+            }
+
+//            console.log(center);
+//            console.log(Math.pow(center[0]-x, 2) + Math.pow(center[1]-y, 2) <= Math.pow(r, 2));
+        };
+        /*
+        *   Soldier 士兵构造函数
+        * */
+
+        var Circle = function (x, y, r, startDeg, arc) {
+            var self = this;
+                self.centerX = x;
+                self.centerY = y;
+                self.radius = r;
+                self.startDeg = startDeg;
+                self.arc = arc;
+                self.context = public.context;
+                self.rotateDeg = 0;
+                self.count = 0;
+                self.bottomStart = 25;
+                self.bottomEnd = 65;
+                self.statusBottom = true;
+                self.bottomPos = [170, 255];
+        };
+        Circle.prototype.paint = function () {
+            var ctx = this.context;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, this.radius, this.startDeg, this.arc);
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = "#fff";
+            ctx.stroke();
+        };
+        Circle.prototype.rotate = function () {
+            var ctx = this.context;
+            var perRotate = 0.05;
+            this.rotateDeg += perRotate;
+            this.count += 1;
+            this.startDeg += perRotate;
+            this.arc += perRotate;
+            if(this.rotateDeg >= 2 * Math.PI ) {
+                this.rotateDeg = 0;
+                this.count = 0;
+            }
+
+            if(this.count >= this.bottomStart && this.count <= this.bottomEnd) {
+                this.statusBottom = false;
+            } else {
+                this.statusBottom = true;
+            }
+//            console.log(this.statusBottom);
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, this.radius, this.startDeg, this.arc);
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = "#fff";
+            ctx.stroke();
+        };
+        /*
+        *   Circle 圆构造函数
+        * */
+
+        var Stage = function () {
+            var self = this;
+                self.context = public.context;
+                self.startX = 0;
+                self.startY = 0;
+                self.width = 320;
+                self.height = 568;
+        };
+        Stage.prototype.refresh = function () {
+            var ctx = this.context;
+            ctx.clearRect(this.startX, this.startY, this.width, this.height);
+            console.log("refresh");
+        };
+        /*
+        *   整个画布
+        * */
+        var stage = new Stage();
+
+        var soldier = new Soldier();
+        soldier.paint();
+        $(document).on('touchstart', function () {
+            soldier.jump();
+        });
+
+        var circle = new Circle(160, 150, 100, 0, 1.5 * Math.PI);
+        circle.paint();
+
+        public.timer = window.setInterval(function () {
+            stage.refresh();
+            soldier.down();
+            circle.rotate();
+            soldier.collision(circle.bottomPos, circle.statusBottom);
+        }, 1000/60);
+
+
+    });
+</script>
+</body>
+</html>
