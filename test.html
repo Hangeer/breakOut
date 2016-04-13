@@ -6,7 +6,6 @@
     <meta name="screen-orientation" content="portrait">
     <title>突出重围</title>
     <script src="./js/zepto.js"></script>
-    <!--<script src="./js/phaser.min.js"></script>-->
     <style>
         * {
             margin: 0;
@@ -52,14 +51,14 @@
         };
         var Soldier = function () {
             var self = this;
-                self.width = 20;
-                self.height = 20;
-                self.top = 400;
-                self.left = 150;
-                self.timer = null;
-                self.speed = 1;
-                self.t = 0;
-                self.context = public.context;
+            self.width = 20;
+            self.height = 20;
+            self.top = 400;
+            self.left = 150;
+            self.timer = null;
+            self.speed = 1;
+            self.t = 0;
+            self.context = public.context;
         };
         Soldier.prototype.paint = function () {
             var ctx = this.context;
@@ -93,14 +92,14 @@
             var x = point[0];
             var y = point[1];
             var r = 5;
-            var center = [this.left+this.width, this.top+this.height];
-            if (status && Math.pow(center[0]-x, 2) + Math.pow(center[1]-y, 2) <= Math.pow(r, 2)) {
+            var center = [this.left + this.width/2, this.top + this.height/2];
+            if (status && Math.pow(center[0] - x, 2) + Math.pow(center[1]-y, 2) <= Math.pow(r, 2)) {
                 console.log("Collision");
                 public.stopTimer();
             }
-
-//            console.log(center);
-//            console.log(Math.pow(center[0]-x, 2) + Math.pow(center[1]-y, 2) <= Math.pow(r, 2));
+        };
+        Soldier.prototype.returnTop = function () {
+            return this.top;
         };
         /*
         *   Soldier 士兵构造函数
@@ -108,18 +107,26 @@
 
         var Circle = function (x, y, r, startDeg, arc) {
             var self = this;
-                self.centerX = x;
-                self.centerY = y;
-                self.radius = r;
-                self.startDeg = startDeg;
-                self.arc = arc;
-                self.context = public.context;
-                self.rotateDeg = 0;
-                self.count = 0;
-                self.bottomStart = 25;
-                self.bottomEnd = 65;
-                self.statusBottom = true;
-                self.bottomPos = [170, 255];
+            self.context = public.context;
+            self.centerX = x;
+            self.centerY = y;
+            self.radius = r;
+            self.startDeg = startDeg;
+            self.arc = arc;
+
+            self.rotateDeg = 0;
+            self.count = 0;
+
+            self.bottomStart = 30;
+            self.bottomEnd = 65;
+            self.statusBottom = true;
+            self.bottomPos = [160, 255];
+
+            self.topStart = 90;
+            self.topEnd = 124;
+            self.statusTop = true;
+            self.topPos = [160, 55];
+
         };
         Circle.prototype.paint = function () {
             var ctx = this.context;
@@ -134,19 +141,27 @@
             var perRotate = 0.05;
             this.rotateDeg += perRotate;
             this.count += 1;
+
             this.startDeg += perRotate;
             this.arc += perRotate;
+
             if(this.rotateDeg >= 2 * Math.PI ) {
                 this.rotateDeg = 0;
                 this.count = 0;
             }
 
+//            console.log(this.count);
             if(this.count >= this.bottomStart && this.count <= this.bottomEnd) {
                 this.statusBottom = false;
             } else {
                 this.statusBottom = true;
             }
-//            console.log(this.statusBottom);
+
+            if(this.count >= this.topStart && this.count <= this.topEnd) {
+                this.statusTop = false;
+            } else {
+                this.statusTop = true;
+            }
             ctx.beginPath();
             ctx.arc(this.centerX, this.centerY, this.radius, this.startDeg, this.arc);
             ctx.lineWidth = 5;
@@ -159,16 +174,49 @@
 
         var Stage = function () {
             var self = this;
-                self.context = public.context;
-                self.startX = 0;
-                self.startY = 0;
-                self.width = 320;
-                self.height = 568;
+            self.context = public.context;
+            self.startX = 0;
+            self.startY = 0;
+            self.width = 320;
+            self.height = 568;
+
+            self.upFlag = false;
+            self.upPosLow = 300;
         };
         Stage.prototype.refresh = function () {
             var ctx = this.context;
             ctx.clearRect(this.startX, this.startY, this.width, this.height);
-            console.log("refresh");
+//            console.log("refresh");
+        };
+        Stage.prototype.start = function () {
+            public.timer = window.setInterval(function () {
+                stage.refresh();
+                soldier.down();
+                circle.rotate();
+                soldier.collision(circle.bottomPos, circle.statusBottom);
+                soldier.collision(circle.topPos, circle.statusTop);
+            }, 1000/60);
+
+            $(document).on('touchstart', function () {
+                soldier.jump();
+//                console.log(soldier.returnTop());
+                stage.up(soldier.returnTop());
+            });
+
+        };
+        Stage.prototype.up = function (soldierTop) {
+            var ctx = this.context;
+
+            if(soldierTop < this.upPosLow) {
+                this.upFlag = true;
+            } else {
+                this.upFlag = false;
+            }
+            if(this.upFlag) {
+                ctx.translate(0, 20);
+                this.upPosLow -= 20;
+            }
+            console.log(soldierTop + " " + this.upPosLow);
         };
         /*
         *   整个画布
@@ -177,19 +225,10 @@
 
         var soldier = new Soldier();
         soldier.paint();
-        $(document).on('touchstart', function () {
-            soldier.jump();
-        });
-
         var circle = new Circle(160, 150, 100, 0, 1.5 * Math.PI);
         circle.paint();
 
-        public.timer = window.setInterval(function () {
-            stage.refresh();
-            soldier.down();
-            circle.rotate();
-            soldier.collision(circle.bottomPos, circle.statusBottom);
-        }, 1000/60);
+        stage.start();
 
 
     });
