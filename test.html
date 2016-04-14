@@ -172,6 +172,37 @@
         *   Circle 圆构造函数
         * */
 
+        function Square (x, y, width, height) {
+            var self = this;
+            self.context = public.context;
+            self.center = [x, y];
+            self.width = width;
+            self.height = height;
+            self.rotateDeg = 0;
+        }
+        Square.prototype.paint = function () {
+            var ctx = this.context;
+            ctx.save();
+            ctx.translate(this.center[0] + .5 * this.width, this.center[1] + .5 * this.height);
+            ctx.rotate(this.rotateDeg);
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
+            ctx.restore();
+        };
+        Square.prototype.rotate = function () {
+            var ctx = this.context;
+            ctx.save();
+            ctx.translate(this.center[0] + .5 * this.width, this.center[1] + .5 * this.height);
+            ctx.rotate(this.rotateDeg);
+            ctx.clearRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
+            ctx.restore();
+            this.rotateDeg += 0.02;
+            this.paint();
+        };
+        /*
+        *   Square 方块构造函数
+        * */
+
         var Stage = function () {
             var self = this;
             self.context = public.context;
@@ -195,6 +226,7 @@
                 circle.rotate();
                 soldier.collision(circle.bottomPos, circle.statusBottom);
                 soldier.collision(circle.topPos, circle.statusTop);
+                square.rotate();
             }, 1000/60);
 
             $(document).on('touchstart', function () {
@@ -214,6 +246,7 @@
             if(this.upFlag) {
                 ctx.translate(0, 20);
                 this.upPosLow -= 20;
+                this.startY -= 20;
             }
             console.log(soldierTop + " " + this.upPosLow);
         };
@@ -226,6 +259,8 @@
         soldier.paint();
         var circle = new Circle(160, 150, 100, 0, 1.5 * Math.PI);
         circle.paint();
+        var square = new Square(60, -400, 200, 200);
+        square.paint();
 
         stage.start();
 

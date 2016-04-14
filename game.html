@@ -46,96 +46,54 @@
             public.canvas = document.getElementById('canvas');
             public.context = canvas.getContext('2d');
 
-            function Soldier () {
+
+//            var angleInRadians = 45 * Math.PI / 180;
+//            var x = 60;
+//            var y = 100;
+//            var width = 200;
+//            var height = 200;
+
+//            public.context.translate(x + .5 * width , y + .5 * height);
+//            public.context.rotate(angleInRadians);
+//            public.context.fillStyle = "#fff";
+//            public.context.fillRect(-.5 * width, -.5 * height, width, height);
+
+            function Square (x, y, width, height) {
                 var self = this;
-                    self.width = 30;
-                    self.height = 30;
-                    self.top = 350;
-                    self.left = 145;
-                    self.timer = null;
-                    self.speed = 1;
+                self.context = public.context;
+                self.center = [x, y];
+                self.width = width;
+                self.height = height;
+                self.rotateDeg = 0;
             }
-            Soldier.prototype.paint = function (ctx) {
+            Square.prototype.paint = function () {
+                var ctx = this.context;
+                ctx.save();
+                ctx.translate(this.center[0] + .5 * this.width, this.center[1] + .5 * this.height);
+                ctx.rotate(this.rotateDeg);
                 ctx.fillStyle = "#fff";
-                ctx.fillRect(this.left, this.top, this.width, this.height);
+                ctx.fillRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
+                ctx.restore();
             };
-            Soldier.prototype.move = function (ctx) {
-                this.speed = 1;
-                ctx.clearRect(this.left, this.top, this.width, this.height);
-                this.top -= 50;
-                ctx.fillRect(this.left, this.top, this.width, this.height);
+            Square.prototype.rotate = function () {
+                var ctx = this.context;
 
-            };
-            Soldier.prototype.down = function (ctx) {
-                var acc = 1.05;
-                this.speed = Math.ceil(acc*this.speed);
-                ctx.clearRect(this.left, this.top, this.width, this.height);
-                this.top += this.speed;
-                ctx.fillRect(this.left, this.top, this.width, this.height);
-//                console.log(ctx.isPointInPath(200, 145));
-                this.collision([145, 185]);
-                console.log("pos: " + this.top + " " + this.left);
-                this.isEnd(ctx);
-            };
-            Soldier.prototype.isEnd = function (ctx) {
-                if (this.top > 600) {
-                    console.log("over");
-                    window.clearInterval(timer);
-                }
-            };
-            Soldier.prototype.collision = function (point) {
-                var x = point[0];
-                var y = point[1];
-                var r = 5;
-                if ( Math.pow(this.top - y, 2) + Math.pow(this.left - x, 2) <= Math.pow(r, 2)) {
-                    window.clearInterval(timer);
-                    console.log("yaerma");
-                }
+                ctx.save();
+                ctx.translate(this.center[0] + .5 * this.width, this.center[1] + .5 * this.height);
+                ctx.rotate(this.rotateDeg);
+                ctx.clearRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
+                ctx.restore();
+                this.rotateDeg += 0.02;
+                this.paint();
+
             };
 
-//            function Circle (x, y, r, startDeg, arc) {
-//                var self = this;
-//                    self.centerX = x;
-//                    self.centerY = y;
-//                    self.radius = r;
-//                    self.startDegree = startDeg;
-//                    self.arc = arc;
-//            }
-//            Circle.prototype.draw = function (ctx) {
-//                ctx.beginPath();
-//                ctx.arc(this.centerX, this.centerY, this.radius, this.startDegree, this.arc);
-//                ctx.strokeStyle = "#fff";
-//                ctx.stroke();
-//            };
-//            Cilcle.prototype.move = function (ctx) {
-//
-//            };
+            var square = new Square(60, 100, 200, 200);
+            square.paint();
 
-//            public.context.beginPath();
-//            public.context.arc(150, 100, 100, 0 , 1.5*Math.PI);
-//            public.context.strokeStyle = "#fff";
-//            public.context.stroke();
-
-
-            var soldier = new Soldier();
-            soldier.paint(public.context);
-
-            var timer = window.setInterval(function () {
-                soldier.down(public.context);
-            }, 40);
-
-            $(document).on('touchstart', function () {
-                soldier.move(public.context);
+            document.addEventListener('touchstart', function () {
+                square.rotate();
             });
-
-            /*
-            *   思路: 每次方块运动的时候保存几个点的坐标
-            *           重绘的时候检测点坐标是否在某个区域内部
-            *   或者保存点,判断点之间的距离
-            *   用图片试一下
-            *
-            *   判断某一时间内,小方块能经过那个路径
-            * */
 
         });
     </script>
