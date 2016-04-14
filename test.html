@@ -70,7 +70,7 @@
         };
         Soldier.prototype.jump = function () {
             var ctx = this.context;
-            this.speed = -10;
+            this.speed = -12;
             this.t = 0;
             ctx.clearRect(this.left, this.top, this.width, this.height);
             ctx.fillRect(this.left, this.top, this.width, this.height);
@@ -78,8 +78,13 @@
         Soldier.prototype.down = function () {
             var ctx = this.context;
             var acc = 0.1;
-            this.t += 0.01;
-            this.speed = Math.ceil(this.speed + acc * this.t);
+            if(this.speed < 10) {
+                this.t += 0.01;
+                this.speed = Math.ceil(this.speed + acc * this.t);
+            } else {
+                this.speed = 10;
+            }
+//            console.log(this.speed);
             ctx.clearRect(this.left, this.top, this.width, this.height);
             this.top += this.speed;
             ctx.fillRect(this.left, this.top, this.width, this.height);
@@ -259,7 +264,7 @@
             ctx.restore();
             this.rotateDeg += 0.02;
             this.count++;
-            console.log(this.count);
+//            console.log(this.count);
             if (this.count >= this.bottomCollision.start && this.count <= this.bottomCollision.end) {
                 this.bottomCollision.isCollision = false;
                 console.log(false);
