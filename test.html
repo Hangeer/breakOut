@@ -185,9 +185,12 @@
             ctx.save();
             ctx.translate(this.center[0] + .5 * this.width, this.center[1] + .5 * this.height);
             ctx.rotate(this.rotateDeg);
-            ctx.fillStyle = "#fff";
-            ctx.fillRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
+            ctx.fillStyle = "#ace";
+            ctx.strokeRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
             ctx.restore();
+
+            soldier.paint();
+            /* 此处一定要重绘士兵 */
         };
         Square.prototype.rotate = function () {
             var ctx = this.context;
@@ -217,6 +220,7 @@
         Stage.prototype.refresh = function () {
             var ctx = this.context;
             ctx.clearRect(this.startX, this.startY, this.width, this.height);
+            soldier.paint();
 //            console.log("refresh");
         };
         Stage.prototype.start = function () {
@@ -227,11 +231,11 @@
                 soldier.collision(circle.bottomPos, circle.statusBottom);
                 soldier.collision(circle.topPos, circle.statusTop);
                 square.rotate();
+                stage.up(soldier.returnTop());
             }, 1000/60);
 
             $(document).on('touchstart', function () {
                 soldier.jump();
-                stage.up(soldier.returnTop());
             });
 
         };
@@ -244,11 +248,11 @@
                 this.upFlag = false;
             }
             if(this.upFlag) {
-                ctx.translate(0, 20);
-                this.upPosLow -= 20;
-                this.startY -= 20;
+                ctx.translate(0, 3);
+                this.upPosLow -= 3;
+                this.startY -= 3;
             }
-            console.log(soldierTop + " " + this.upPosLow);
+//            console.log(soldierTop + " " + this.upPosLow);
         };
         /*
         *   整个画布
@@ -270,6 +274,8 @@
         *   试试方形,用三角函数应该可以判断位置
         *   左右移动的方块
         *   有时间的话,把素材替换成图片
+        *
+        *   在刷新的时候同时绘制小球
         * */
     });
 </script>

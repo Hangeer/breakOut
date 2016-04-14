@@ -36,6 +36,9 @@
             <canvas id="canvas" height="568" width="320"></canvas>
         </div>
     </div>
+    <div class="img-container" style="display: none">
+        <img src="./block.png" width="200" height="200" id="block">
+    </div>
     <script>
         $(document).ready(function (ev) {
             var ev = ev || window.event;
@@ -47,16 +50,6 @@
             public.context = canvas.getContext('2d');
 
 
-//            var angleInRadians = 45 * Math.PI / 180;
-//            var x = 60;
-//            var y = 100;
-//            var width = 200;
-//            var height = 200;
-
-//            public.context.translate(x + .5 * width , y + .5 * height);
-//            public.context.rotate(angleInRadians);
-//            public.context.fillStyle = "#fff";
-//            public.context.fillRect(-.5 * width, -.5 * height, width, height);
 
             function Square (x, y, width, height) {
                 var self = this;
@@ -71,8 +64,7 @@
                 ctx.save();
                 ctx.translate(this.center[0] + .5 * this.width, this.center[1] + .5 * this.height);
                 ctx.rotate(this.rotateDeg);
-                ctx.fillStyle = "#fff";
-                ctx.fillRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
+                ctx.drawImage(document.getElementById("block"), -.5 * this.width, -.5 *this.height);
                 ctx.restore();
             };
             Square.prototype.rotate = function () {
