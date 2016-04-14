@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>gravity</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: #ace;
+        }
+        .canvas {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="container" class="container">
+        <canvas id="canvas" class="canvas" width="500" height="500"> 
+            
+        </canvas>
+    </div>
+    <script type="text/javascript">
+        (function () {
+            var canvas = document.querySelector("#canvas");
+            var context = canvas.getContext("2d");
+
+            function Stage () {
+                var self = this;
+                self.context = context;
+                self.width = 500;
+                self.height = 500;
+            }
+            Stage.prototype.refresh = function () {
+                var ctx = this.context;
+                ctx.clearRect(0, 0, this.width, this.height);
+            };
+
+            function Ball () {
+                var self = this;
+                self.context = context;
+                self.width = 30;
+                self.height = 30;
+                self.left = 100;
+                self.top = 100;
+                
+                self.exp = .2;
+                /* 每次增加的距离,模拟加速度 */
+            }
+            Ball.prototype.paint = function () {
+                var ctx = this.context;
+                ctx.fillRect(this.left, this.top, this.width, this.height);
+                ctx.fillStyle = "#ace";
+            };
+            Ball.prototype.jump = function () {
+                this.exp = -this.exp + 1;
+                /* +1 代表自定义的重力加速度,把小球往下面拽 */
+                /* 自己写的时候可以吧值换一下,每点一下屏幕小球就往上面跳 */
+            };
+            Ball.prototype.fall = function () {
+                this.top += this.exp;
+                this.exp += .4;
+                /* 重力加速度相同时间内移动的距离 1 3 5 7... */
+                this.paint();
+
+            };            
+
+            var ball = new Ball();
+            ball.paint();
+            var stage = new Stage();
+            var timer = window.setInterval(function () {
+                if (ball.top >= 450) {
+                    ball.jump();
+                }
+                stage.refresh();
+                    ball.fall();
+            }, 100/6);
+
+        })();
+    </script>
+</body>
+</html>
