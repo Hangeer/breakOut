@@ -96,7 +96,7 @@
             var y = point[1];
             var r = 5;
             var center = [this.left + this.width/2, this.top + this.height/2];
-            console.log(center);
+//            console.log(center);
             if (status && Math.pow(center[0] - x, 2) + Math.pow(center[1]-y, 2) <= Math.pow(r, 2)) {
                 console.log("Collision");
                 public.stopTimer();
@@ -234,8 +234,8 @@
             self.bottomCollision = {
                 x: 160,
                 y: centerY + self.width/2,
-                start: 80,
-                end: 110,
+                start: 200,
+                end: 280,
                 isCollision: true
             }
         }
@@ -257,12 +257,15 @@
             ctx.rotate(this.rotateDeg);
             ctx.clearRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
             ctx.restore();
-            this.rotateDeg += 0.05;
+            this.rotateDeg += 0.02;
             this.count++;
+            console.log(this.count);
             if (this.count >= this.bottomCollision.start && this.count <= this.bottomCollision.end) {
                 this.bottomCollision.isCollision = false;
+                console.log(false);
             } else {
                 this.bottomCollision.isCollision = true;
+                console.log(true);
             }
             if(this.rotateDeg >= 2 * Math.PI) {
                 this.rotateDeg = 0;
@@ -270,7 +273,7 @@
             }
 //            console.log(this.count);
 
-            this.bottomCollision.y = this.center.y + this.width + ((Math.sqrt(2)-1)/4 + 1/8) * Math.cos(this.rotateDeg - Math.PI/2) * this.width/2;
+            this.bottomCollision.y = this.center.y + this.width + ((Math.sqrt(2)-1)/4 + 1/8) * Math.cos(this.rotateDeg*3 - Math.PI/2) * this.width/2;
 
 //            console.log(this.bottomCollision.x + " " + this.bottomCollision.x);
 //            ctx.fillStyle = "#fff";
