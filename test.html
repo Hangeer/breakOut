@@ -96,6 +96,7 @@
             var y = point[1];
             var r = 5;
             var center = [this.left + this.width/2, this.top + this.height/2];
+            console.log(center);
             if (status && Math.pow(center[0] - x, 2) + Math.pow(center[1]-y, 2) <= Math.pow(r, 2)) {
                 console.log("Collision");
                 public.stopTimer();
@@ -175,51 +176,68 @@
         *   Circle 圆构造函数
         * */
 
-        function Square (x, y, width, height) {
-            var self = this;
-            self.context = public.context;
-            self.center = [x, y];
-            self.width = width;
-            self.height = height;
-            self.rotateDeg = 0;
-        }
-        Square.prototype.paint = function () {
-            var ctx = this.context;
-            ctx.save();
-            ctx.translate(this.center[0] + .5 * this.width, this.center[1] + .5 * this.height);
-            ctx.rotate(this.rotateDeg);
-            ctx.fillStyle = "#ace";
-            ctx.strokeRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
-            ctx.restore();
-
-            soldier.paint();
-            /* 此处一定要重绘士兵 */
-        };
-        Square.prototype.rotate = function () {
-            var ctx = this.context;
-            ctx.save();
-            ctx.translate(this.center[0] + .5 * this.width, this.center[1] + .5 * this.height);
-            ctx.rotate(this.rotateDeg);
-            ctx.clearRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
-            ctx.restore();
-            this.rotateDeg += 0.02;
-            this.paint();
-        };
+//        function Square (x, y, width, height) {
+//            var self = this;
+//            self.context = public.context;
+//            self.center = [x, y];
+//            self.width = width;
+//            self.height = height;
+//            self.rotateDeg = 0;
+//            self.count = 0;
+//        }
+//        Square.prototype.paint = function () {
+//            var ctx = this.context;
+//            ctx.save();
+//            ctx.translate(this.center[0] + .5 * this.width, this.center[1] + .5 * this.height);
+//            ctx.rotate(this.rotateDeg);
+//            ctx.fillStyle = "#ace";
+//            ctx.strokeRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
+//            ctx.restore();
+//
+//            soldier.paint();
+//            /* 此处一定要重绘士兵 */
+//        };
+//        Square.prototype.rotate = function () {
+//            var ctx = this.context;
+//            var perRotate = 0.05;
+//
+//            ctx.save();
+//            ctx.translate(this.center[0] + .5 * this.width, this.center[1] + .5 * this.height);
+//            ctx.rotate(this.rotateDeg);
+//            ctx.clearRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
+//            ctx.restore();
+//
+//            this.rotateDeg += perRotate;
+//            this.count += 1;
+//            console.log(this.count);
+//            this.paint();
+//        };
         /*
         *   Square 方块构造函数
         * */
 
-        function Barrier (ctx, x, y, width, height, img, rotateDegree) {
+        function Barrier (ctx, centerX, centerY, width, height, img, rotateDegree) {
             var self = this;
             self.context = ctx;
             self.center = {
-                x: x,
-                y: y
+                x: centerX,
+                y: centerY
             };
             self.width = width;
             self.height = height;
             self.img = img;
             self.rotateDeg = rotateDegree;
+            self.count = 0;
+
+//            self.angle = 0;
+
+            self.bottomCollision = {
+                x: 160,
+                y: centerY + self.width/2,
+                start: 80,
+                end: 110,
+                isCollision: true
+            }
         }
         Barrier.prototype.paint = function () {
             var ctx = this.context;
@@ -239,7 +257,26 @@
             ctx.rotate(this.rotateDeg);
             ctx.clearRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
             ctx.restore();
-            this.rotateDeg += 0.02;
+            this.rotateDeg += 0.05;
+            this.count++;
+            if (this.count >= this.bottomCollision.start && this.count <= this.bottomCollision.end) {
+                this.bottomCollision.isCollision = false;
+            } else {
+                this.bottomCollision.isCollision = true;
+            }
+            if(this.rotateDeg >= 2 * Math.PI) {
+                this.rotateDeg = 0;
+                this.count = 0;
+            }
+//            console.log(this.count);
+
+            this.bottomCollision.y = this.center.y + this.width + ((Math.sqrt(2)-1)/4 + 1/8) * Math.cos(this.rotateDeg - Math.PI/2) * this.width/2;
+
+//            console.log(this.bottomCollision.x + " " + this.bottomCollision.x);
+//            ctx.fillStyle = "#fff";
+//            ctx.fillRect(this.bottomCollision.x, this.bottomCollision.y, 2,2);
+
+
             this.paint();
         };
         /*
@@ -270,7 +307,10 @@
                 circle.rotate();
                 soldier.collision(circle.bottomPos, circle.statusBottom);
                 soldier.collision(circle.topPos, circle.statusTop);
-                square.rotate();
+//                console.log(circle.topPos);
+                soldier.collision([barrier.bottomCollision.x, barrier.bottomCollision.y], barrier.bottomCollision.isCollision);
+
+//                square.rotate();
                 barrier.rotate();
                 stage.up(soldier.returnTop());
             }, 1000/60);
@@ -298,15 +338,16 @@
         /*
         *   整个画布
         * */
+
         var stage = new Stage();
 
         var soldier = new Soldier();
         soldier.paint();
         var circle = new Circle(160, 150, 100, 0, 1.5 * Math.PI);
         circle.paint();
-        var square = new Square(60, -400, 200, 200);
-        square.paint();
-        var barrier = new Barrier(public.context, 60, -800, 200, 200, document.getElementById("block"), 0);
+//        var square = new Square(60, -400, 200, 200);
+//        square.paint();
+        var barrier = new Barrier(public.context, 60, -600, 200, 200, document.getElementById("block"), 0);
         barrier.paint();
 
         stage.start();
