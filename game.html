@@ -51,41 +51,80 @@
 
 
 
-            function Square (x, y, width, height) {
+//            function Square (x, y, width, height) {
+//                var self = this;
+//                self.context = public.context;
+//                self.center = [x, y];
+//                self.width = width;
+//                self.height = height;
+//                self.rotateDeg = 0;
+//            }
+//            Square.prototype.paint = function () {
+//                var ctx = this.context;
+//                ctx.save();
+//                ctx.translate(this.center[0] + .5 * this.width, this.center[1] + .5 * this.height);
+//                ctx.rotate(this.rotateDeg);
+//                ctx.drawImage(document.getElementById("block"), -.5 * this.width, -.5 *this.height);
+//                ctx.restore();
+//            };
+//            Square.prototype.rotate = function () {
+//                var ctx = this.context;
+//
+//                ctx.save();
+//                ctx.translate(this.center[0] + .5 * this.width, this.center[1] + .5 * this.height);
+//                ctx.rotate(this.rotateDeg);
+//                ctx.clearRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
+//                ctx.restore();
+//                this.rotateDeg += 0.02;
+//                this.paint();
+//
+//            };
+//
+//            var square = new Square(60, 100, 200, 200);
+//            square.paint();
+//
+//            document.addEventListener('touchstart', function () {
+//                square.rotate();
+//            });
+
+            function Barrier (ctx, x, y, width, height, img, rotateDegree) {
                 var self = this;
-                self.context = public.context;
-                self.center = [x, y];
+                self.context = ctx;
+                self.center = {
+                    x: x,
+                    y: y
+                };
                 self.width = width;
                 self.height = height;
-                self.rotateDeg = 0;
+                self.img = img;
+                self.rotateDeg = rotateDegree;
             }
-            Square.prototype.paint = function () {
+            Barrier.prototype.paint = function () {
                 var ctx = this.context;
                 ctx.save();
-                ctx.translate(this.center[0] + .5 * this.width, this.center[1] + .5 * this.height);
+                ctx.translate(this.center.x + .5 * this.width, this.center.y + .5 * this.height);
                 ctx.rotate(this.rotateDeg);
-                ctx.drawImage(document.getElementById("block"), -.5 * this.width, -.5 *this.height);
+                ctx.drawImage(this.img, -.5 * this.width, -.5 *this.height);
                 ctx.restore();
             };
-            Square.prototype.rotate = function () {
+            Barrier.prototype.rotate = function () {
                 var ctx = this.context;
-
                 ctx.save();
-                ctx.translate(this.center[0] + .5 * this.width, this.center[1] + .5 * this.height);
+                ctx.translate(this.center.x + .5 * this.width, this.center.y + .5 * this.height);
                 ctx.rotate(this.rotateDeg);
                 ctx.clearRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
                 ctx.restore();
                 this.rotateDeg += 0.02;
                 this.paint();
-
             };
 
-            var square = new Square(60, 100, 200, 200);
-            square.paint();
+            var barrier = new Barrier(public.context, 60, 100, 200, 200, document.getElementById("block"), 0);
+            barrier.paint();
 
             document.addEventListener('touchstart', function () {
-                square.rotate();
+                barrier.rotate();
             });
+
 
         });
     </script>

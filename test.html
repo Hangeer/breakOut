@@ -34,6 +34,9 @@
     <div id="stage" class="stage">
         <canvas id="canvas" height="568" width="320"></canvas>
     </div>
+    <div class="img-container" style="display: none">
+        <img src="./block.png" width="200" height="200" id="block">
+    </div>
 </div>
 <script>
     $(document).ready(function (ev) {
@@ -206,6 +209,43 @@
         *   Square 方块构造函数
         * */
 
+        function Barrier (ctx, x, y, width, height, img, rotateDegree) {
+            var self = this;
+            self.context = ctx;
+            self.center = {
+                x: x,
+                y: y
+            };
+            self.width = width;
+            self.height = height;
+            self.img = img;
+            self.rotateDeg = rotateDegree;
+        }
+        Barrier.prototype.paint = function () {
+            var ctx = this.context;
+            ctx.save();
+            ctx.translate(this.center.x + .5 * this.width, this.center.y + .5 * this.height);
+            ctx.rotate(this.rotateDeg);
+            ctx.drawImage(this.img, -.5 * this.width, -.5 *this.height);
+            ctx.restore();
+
+            soldier.paint();
+            /* 此处一定要重绘士兵 */
+        };
+        Barrier.prototype.rotate = function () {
+            var ctx = this.context;
+            ctx.save();
+            ctx.translate(this.center.x + .5 * this.width, this.center.y + .5 * this.height);
+            ctx.rotate(this.rotateDeg);
+            ctx.clearRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
+            ctx.restore();
+            this.rotateDeg += 0.02;
+            this.paint();
+        };
+        /*
+        *   带图片的障碍物绘制
+        * */
+
         var Stage = function () {
             var self = this;
             self.context = public.context;
@@ -231,6 +271,7 @@
                 soldier.collision(circle.bottomPos, circle.statusBottom);
                 soldier.collision(circle.topPos, circle.statusTop);
                 square.rotate();
+                barrier.rotate();
                 stage.up(soldier.returnTop());
             }, 1000/60);
 
@@ -265,6 +306,8 @@
         circle.paint();
         var square = new Square(60, -400, 200, 200);
         square.paint();
+        var barrier = new Barrier(public.context, 60, -800, 200, 200, document.getElementById("block"), 0);
+        barrier.paint();
 
         stage.start();
 
