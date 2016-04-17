@@ -40,6 +40,7 @@
 </div>
 <div id="imgs" class="imgs">
     <img src="../img/circle.png" alt="circle" id="circle" width="200" height="200">
+    <img src="../img/block.png" alt="block" id="block" width="20" height="20">
 </div>
 
 <script>
@@ -56,6 +57,9 @@
                 window.clearInterval(this.timer);
             }
         };
+        /*
+        *   伪全局对象
+        * */
 
         var Stage = function () {
             var self = this;
@@ -72,19 +76,12 @@
             var ctx = this.context;
             ctx.clearRect(this.startX, this.startY, this.width, this.height);
         };
-        Stage.prototype.start = function () {
-            public.timer = window.setInterval(function () {
-
-            });
-        };
         Stage.prototype.up = function (soldierTop) {
             var ctx = this.context;
 
-            if(soldierTop < this.upPosLow) {
-                this.upFlag = true;
-            } else {
-                this.upFlag = false;
-            }
+            this.upFlag = (soldierTop < this.upPosLow);
+            /* 判断小球位置,是否向上走 */
+
             if(this.upFlag) {
                 ctx.translate(0, 3);
                 this.upPosLow -= 3;
@@ -97,12 +94,13 @@
                 ball.fall();
                 barrierOne.rotate();
                 barrierTwo.rotate();
+                blockOne.move();
                 stage.up(ball.top);
                 ball.collision(barrierOne.testPoint.down.y, barrierOne.testPoint.down.status);
                 ball.collision(barrierOne.testPoint.up.y, barrierOne.testPoint.up.status);
                 ball.collision(barrierTwo.testPoint.down.y, barrierOne.testPoint.down.status);
                 ball.collision(barrierTwo.testPoint.up.y, barrierOne.testPoint.up.status);
-                console.log(barrierTwo.rotateDeg);
+                ball.collision(blockOne.top, blockOne.isClose);
             }, 100/6);
             $(document).on('click', function () {
                 ball.jump();
@@ -123,11 +121,13 @@
 
             self.timer = null;
             self.exp = .1;
+            /* 每次移动距离, 作为速度 */
         }
         Ball.prototype.paint = function () {
             var ctx = this.context;
             ctx.fillRect(this.left, this.top, this.width, this.height);
             ctx.fillStyle = "#ace";
+            /* 等图下来了改成图 */
         };
         Ball.prototype.jump = function () {
             this.exp = -5;
@@ -207,17 +207,11 @@
                 this.rotateDeg = this.initDegree;
             }
 
-            if(this.rotateDeg >= this.testPoint.up.zone[0] && this.rotateDeg <= this.testPoint.up.zone[1]) {
-                this.testPoint.up.status = false;
-            } else {
-                this.testPoint.up.status = true;
-            }
-
-            if(this.rotateDeg >= this.testPoint.down.zone[0] && this.rotateDeg <= this.testPoint.down.zone[1]) {
-                this.testPoint.down.status = false;
-            } else {
-                this.testPoint.down.status = true;
-            }
+            this.testPoint.up.status = !(this.rotateDeg >= this.testPoint.up.zone[0] && this.rotateDeg <= this.testPoint.up.zone[1]);
+            this.testPoint.down.status = !(this.rotateDeg >= this.testPoint.down.zone[0] && this.rotateDeg <= this.testPoint.down.zone[1]);
+            /*
+            *   圆形上下的碰撞检测
+            * */
 
             this.paint();
 
@@ -225,17 +219,59 @@
             /* 重绘 Ball 避免视觉上的偏差 */
 
         };
+        /*
+        *   Circle 旋转的障碍的构造函数
+        * */
+
+        function Block (ctx, width, height, img, direction, left, top) {
+            var self = this;
+            self.context = ctx;
+            self.width = width;
+            self.height = height;
+            self.img = img;
+            self.direction = direction;
+            /* true -> 向右移动 */
+            self.left = left;
+            /* 方块左边距画布左边位置 */
+            self.top = top;
+            /* 方块顶端距画布顶端位置 */
+            self.isClose = true;
+            /*  */
+        }
+        Block.prototype.paint = function () {
+            var ctx = this.context;
+            ctx.drawImage(this.img, this.left, this.top);
+        };
+        Block.prototype.move = function () {
+            var ctx = this.context;
+            ctx.clearRect(this.left, this.top, this.width, this.height);
+
+            this.isClose = (this.left > 140);
+            /* 这里的判断是手写的, 需要改进 */
+
+            if ((this.direction && this.left + this.width /2 >= 160) || (!this.direction && this.left - this.width / 2 <= 20)) {
+                this.direction = !this.direction;
+            }
+
+            this.direction ? this.left += 1 : this.left -= 1;
+
+            this.paint();
+        };
+        /*
+        *   Block 左右小方块的构造函数
+        * */
 
         var barrierOne = new Circle(public.context, 60, 50, 200, 200, document.querySelector("#circle"), 0, [3.5, 4.9], [.3, 1.8]);
-        barrierOne.paint();
         var barrierTwo = new Circle(public.context, 60, -350, 200, 200, document.querySelector("#circle"),0, [3.5, 4.9], [.3, 1.8]);
+        var blockOne = new Block(public.context, 20, 20, document.querySelector("#block"), true, 100, -450);
+        barrierOne.paint();
         barrierTwo.paint();
+        blockOne.paint();
 
         var stage = new Stage();
         var ball = new Ball();
         ball.paint();
         stage.run();
-
 
     });
 </script>
