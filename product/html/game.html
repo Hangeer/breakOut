@@ -66,7 +66,7 @@
             self.height = 568;
 
             self.upFlag = false;
-            self.upPosLow = 300;
+            self.upPosLow = 250;
         };
         Stage.prototype.refresh = function () {
             var ctx = this.context;
@@ -96,15 +96,21 @@
                 stage.refresh();
                 ball.fall();
                 barrierOne.rotate();
-                ball.collision(barrierOne.testPoint.down.y, true);
-                console.log(ball.getPos()[1]);
-            }, 1000/60);
+                barrierTwo.rotate();
+                stage.up(ball.top);
+                ball.collision(barrierOne.testPoint.down.y, barrierOne.testPoint.down.status);
+                ball.collision(barrierOne.testPoint.up.y, barrierOne.testPoint.up.status);
+                ball.collision(barrierTwo.testPoint.down.y, barrierOne.testPoint.down.status);
+                ball.collision(barrierTwo.testPoint.up.y, barrierOne.testPoint.up.status);
+                console.log(barrierTwo.rotateDeg);
+            }, 100/6);
             $(document).on('click', function () {
                 ball.jump();
             });
         };
         /*
          *   Stage 整个游戏运行的舞台
+         *   因为舞台只有一个,然后就不传参了
          * */
 
         function Ball () {
@@ -153,7 +159,7 @@
          *   Ball 构造函数
          * */
 
-        function Circle (ctx, startX, startY, width, height, img, rotateDegree) {
+        function Circle (ctx, startX, startY, width, height, img, rotateDegree, zoneUp, zoneDown) {
             var self = this;
             self.context = ctx;
             self.start = {
@@ -164,16 +170,17 @@
             self.height = height;
             self.img = img;
             self.rotateDeg = rotateDegree;
+            self.initDegree = rotateDegree;
 
             self.testPoint = {
                 up: {
                     y: this.start.y,
-                    zone: [],
+                    zone: zoneUp,
                     status: true
                 },
                 down: {
                     y: this.start.y + this.height,
-                    zone: [],
+                    zone: zoneDown,
                     status: true
                 }
             }
@@ -188,12 +195,30 @@
         };
         Circle.prototype.rotate = function () {
             var ctx = this.context;
+
             ctx.save();
             ctx.translate(this.start.x + .5 * this.width, this.start.y + .5 * this.height);
             ctx.rotate(this.rotateDeg);
             ctx.clearRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
             ctx.restore();
+
             this.rotateDeg += 0.02;
+            if(this.rotateDeg >= 2 * Math.PI + this.initDegree) {
+                this.rotateDeg = this.initDegree;
+            }
+
+            if(this.rotateDeg >= this.testPoint.up.zone[0] && this.rotateDeg <= this.testPoint.up.zone[1]) {
+                this.testPoint.up.status = false;
+            } else {
+                this.testPoint.up.status = true;
+            }
+
+            if(this.rotateDeg >= this.testPoint.down.zone[0] && this.rotateDeg <= this.testPoint.down.zone[1]) {
+                this.testPoint.down.status = false;
+            } else {
+                this.testPoint.down.status = true;
+            }
+
             this.paint();
 
             ball.paint();
@@ -201,8 +226,10 @@
 
         };
 
-        var barrierOne = new Circle(public.context, 60, 50, 200, 200, document.querySelector("#circle"), 0);
+        var barrierOne = new Circle(public.context, 60, 50, 200, 200, document.querySelector("#circle"), 0, [3.5, 4.9], [.3, 1.8]);
         barrierOne.paint();
+        var barrierTwo = new Circle(public.context, 60, -350, 200, 200, document.querySelector("#circle"),0, [3.5, 4.9], [.3, 1.8]);
+        barrierTwo.paint();
 
         var stage = new Stage();
         var ball = new Ball();
