@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0, width=device-width">
+    <meta name="screen-orientation" content="portrait">
+    <title>突出重围</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        html, body{
+            height: 100%;
+            position: relative;
+            margin: 0;
+            overflow: hidden;
+            -webkit-user-select:none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body{
+            background-color: #000018;
+            font-family: 'Microsoft YaHei';
+        }
+        .canvas-container {
+            width: 320px;
+            margin: 0 auto;
+        }
+        .imgs {
+            display: none;
+        }
+    </style>
+    <script src="../js/zepto.js"></script>
+</head>
+<body>
+<div id="container" class="container">
+    <div id="canvas-container" class="canvas-container">
+        <canvas id="canvas" class="canvas" width="320" height="568"></canvas>
+    </div>
+</div>
+<div id="imgs" class="imgs">
+    <img src="../img/circle.png" alt="circle" id="circle" width="200" height="200">
+</div>
+
+<script>
+    $(document).ready(function (ev) {
+        var ev = ev || window.event;
+        ev.preventDefault;
+        /* 阻止默认事件 */
+
+        var public = {
+            canvas: document.querySelector("#canvas"),
+            context: this.canvas.getContext("2d"),
+            timer: null,
+            stopTimer: function () {
+                window.clearInterval(this.timer);
+            }
+        };
+
+        var Stage = function () {
+            var self = this;
+            self.context = public.context;
+            self.startX = 0;
+            self.startY = 0;
+            self.width = 320;
+            self.height = 568;
+
+            self.upFlag = false;
+            self.upPosLow = 300;
+        };
+        Stage.prototype.refresh = function () {
+            var ctx = this.context;
+            ctx.clearRect(this.startX, this.startY, this.width, this.height);
+        };
+        Stage.prototype.start = function () {
+            public.timer = window.setInterval(function () {
+
+            });
+        };
+        Stage.prototype.up = function (soldierTop) {
+            var ctx = this.context;
+
+            if(soldierTop < this.upPosLow) {
+                this.upFlag = true;
+            } else {
+                this.upFlag = false;
+            }
+            if(this.upFlag) {
+                ctx.translate(0, 3);
+                this.upPosLow -= 3;
+                this.startY -= 3;
+            }
+        };
+        Stage.prototype.run = function () {
+            public.timer = window.setInterval(function () {
+                stage.refresh();
+                ball.fall();
+                barrierOne.rotate();
+                ball.collision(barrierOne.testPoint.down.y, true);
+                console.log(ball.getPos()[1]);
+            }, 1000/60);
+            $(document).on('click', function () {
+                ball.jump();
+            });
+        };
+        /*
+         *   Stage 整个游戏运行的舞台
+         * */
+
+        function Ball () {
+            var self = this;
+            self.context = public.context;
+            self.width = 20;
+            self.height = 20;
+            self.top = 400;
+            self.left = 150;
+
+            self.timer = null;
+            self.exp = .1;
+        }
+        Ball.prototype.paint = function () {
+            var ctx = this.context;
+            ctx.fillRect(this.left, this.top, this.width, this.height);
+            ctx.fillStyle = "#ace";
+        };
+        Ball.prototype.jump = function () {
+            this.exp = -5;
+        };
+        Ball.prototype.fall = function () {
+            this.top += this.exp;
+            this.exp += .2;
+            this.paint();
+            this.isEnd();
+        };
+        Ball.prototype.isEnd = function () {
+            if (this.top > 600) {
+                console.log("game over");
+                public.stopTimer();
+            }
+        };
+        Ball.prototype.getPos = function () {
+            return [this.left + this.width / 2, this.top + this.height / 2];
+        };
+        Ball.prototype.collision = function (posY, status) {
+            var selfY = this.getPos()[1];
+            if (Math.abs(posY - selfY) < 5 && status) {
+                console.log("collision");
+                console.log("game over");
+                public.stopTimer();
+            }
+        };
+        /*
+         *   Ball 构造函数
+         * */
+
+        function Circle (ctx, startX, startY, width, height, img, rotateDegree) {
+            var self = this;
+            self.context = ctx;
+            self.start = {
+                x: startX,
+                y: startY
+            };
+            self.width = width;
+            self.height = height;
+            self.img = img;
+            self.rotateDeg = rotateDegree;
+
+            self.testPoint = {
+                up: {
+                    y: this.start.y,
+                    zone: [],
+                    status: true
+                },
+                down: {
+                    y: this.start.y + this.height,
+                    zone: [],
+                    status: true
+                }
+            }
+        }
+        Circle.prototype.paint = function () {
+            var ctx = this.context;
+            ctx.save();
+            ctx.translate(this.start.x + .5 * this.width, this.start.y + .5 * this.height);
+            ctx.rotate(this.rotateDeg);
+            ctx.drawImage(this.img, -.5 * this.width, -.5 *this.height);
+            ctx.restore();
+        };
+        Circle.prototype.rotate = function () {
+            var ctx = this.context;
+            ctx.save();
+            ctx.translate(this.start.x + .5 * this.width, this.start.y + .5 * this.height);
+            ctx.rotate(this.rotateDeg);
+            ctx.clearRect(-.5 * this.width, -.5 *this.height, this.width, this.height);
+            ctx.restore();
+            this.rotateDeg += 0.02;
+            this.paint();
+
+            ball.paint();
+            /* 重绘 Ball 避免视觉上的偏差 */
+
+        };
+
+        var barrierOne = new Circle(public.context, 60, 50, 200, 200, document.querySelector("#circle"), 0);
+        barrierOne.paint();
+
+        var stage = new Stage();
+        var ball = new Ball();
+        ball.paint();
+        stage.run();
+
+
+    });
+</script>
+</body>
+</html>
