@@ -81,6 +81,7 @@
 
             this.upFlag = (soldierTop < this.upPosLow);
             /* 判断小球位置,是否向上走 */
+            /* 背景的移动也可以写在这里面 */
 
             if(this.upFlag) {
                 ctx.translate(0, 3);
@@ -102,7 +103,7 @@
                 ball.collision(barrierTwo.testPoint.up.y, barrierOne.testPoint.up.status);
                 ball.collision(blockOne.top, blockOne.isClose);
             }, 100/6);
-            $(document).on('click', function () {
+            $(document).on('touchstart', function () {
                 ball.jump();
             });
         };
