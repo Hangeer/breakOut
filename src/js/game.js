@@ -1,3 +1,10 @@
+/*
+*   16-04-18
+*   需要解决的坑
+*   写法要优雅
+*   不同屏幕啥的适配不同大小的画布然后功能函数
+* */
+
 $(document).ready(evt => {
     let ev = evt || window.event;
     ev.preventDefault;
@@ -159,6 +166,12 @@ $(document).ready(evt => {
             this.context.rotate(this.rotateDeg);
             this.context.drawImage(this.img, -.5 * this.width, -.5 * this.height);
             this.context.restore();
+
+            //this.context.save()
+            //            .translate(this.start.x + .5 * this.width, this.start.y + .5 * this.height)
+            //            .rotate(this.rotateDeg)
+            //            .drawImage(this.img, -.5 * this.width, -.5 * this.height)
+            //            .restore();
         }
 
         rotate () {
