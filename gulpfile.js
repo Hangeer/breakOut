@@ -108,7 +108,15 @@ gulp.task('browser-sync', function () {
      * */
     gulp.watch([files.src.html], ['html']);
     gulp.watch([files.src.js], ['babel']);
-    gulp.watch([files.src.less], ['styles']);
+    gulp.watch([files.src.less], ['less-task']);
+    gulp.watch([files.src.imgs], ['img-min']);
+    gulp.watch([files.src.css], ['css-task']);
+});
+
+gulp.task('watch', function () {
+    gulp.watch([files.src.html], ['html']);
+    gulp.watch([files.src.js], ['babel']);
+    gulp.watch([files.src.less], ['less-task']);
     gulp.watch([files.src.imgs], ['img-min']);
     gulp.watch([files.src.css], ['css-task']);
 });
