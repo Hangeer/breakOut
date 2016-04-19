@@ -69,13 +69,25 @@ $(document).ready(evt => {
 
             pub.timer = window.setInterval(function () {
                 stage.refresh();
+                stage.up(ball.getPos()[1]);
                 ball.fall();
+
+                ball.collision(barrierOne.testPoint.down.y, barrierOne.testPoint.down.status);
+                ball.collision(barrierOne.testPoint.up.y, barrierOne.testPoint.up.status);
+                barrierOne.rotate();
+
+                ball.collision(barrierTwo.testPoint.down.y, barrierTwo.testPoint.down.status);
+                ball.collision(barrierTwo.testPoint.up.y, barrierTwo.testPoint.up.status);
+                barrierTwo.rotate();
 
                 ball.collision(barrierThree.testPoint.down.y, barrierThree.testPoint.down.status);
                 ball.collision(barrierThree.testPoint.up.y, barrierThree.testPoint.up.status);
-
                 barrierThree.rotate();
+
+
+
             }, 100/6);
+
             $(document).on('touchstart', function () {
                 ball.jump();
             });
@@ -208,7 +220,7 @@ $(document).ready(evt => {
             this.testPoint.up.status = !(upCount > 0);
             this.testPoint.down.status = !(downCount > 0);
 
-            console.log("down: " + downCount + "up: " + upCount);
+            //console.log("down: " + downCount + "up: " + upCount);
 
             /*
              *   圆形上下的碰撞检测
@@ -269,19 +281,24 @@ $(document).ready(evt => {
      *   左右小方块的构造函数
      * */
 
-    //let stage = new Stage();
+    let stage = new Stage();
     let ball = new Ball(pub.context, 20, 20, 400, 150, document.querySelector("#block"));
-    //let barrierOne = new Circle(pub.context, 60, 50, 200, 200, document.querySelector("#circle"), 0, [3.5, 4.9], [.3, 1.8]);
-    //let barrierTwo = new Circle(pub.context, 60, -350, 200, 200, document.querySelector("#circle"),0, [3.5, 4.9], [.3, 1.8]);
+    let barrierOne = new Circle(pub.context, 60, 50, 200, 200, document.querySelector("#circle"), 0, [[3.5, 4.9]], [[.3, 1.8]]);
+    let barrierTwo = new Circle(pub.context, 85, -250, 150, 150, document.querySelector("#four-exit-circle"), 0, [[0, .7], [1.5, 2.2], [3, 3.7], [4.5, 5.2]], [[0, .7], [1.5, 2.2], [3, 3.7], [4.5, 5.2]]);
+    let barrierThree = new Circle(pub.context, 110, -500, 100, 100, document.querySelector("#two-exit-circle"), 0, [[0, 1.4], [3.2, 4.6]], [[0, 1.4], [3.2, 4.6]]);
+
     //let blockOne = new Block(pub.context, 20, 20, document.querySelector("#block"), true, 100, -450);
-    //
-    //stage.refresh();
-    //barrierOne.paint();
-    //barrierTwo.paint();
-    //blockOne.paint();
+
+    stage.refresh();
+
+    barrierOne.paint();
+    barrierTwo.paint();
+    barrierThree.paint();
     ball.paint();
-    //
-    $(document).on("click", function () {
+
+    //blockOne.paint();
+
+    $(document).on("touchstart", function () {
         if (pub.run === false) {
             stage.run();
             pub.run = true;
@@ -290,11 +307,5 @@ $(document).ready(evt => {
     /*
     *   感觉这样写不怎么优雅
     * */
-
-    let stage = new Stage();
-    let barrierThree = new Circle(pub.context, 110, 50, 100, 100, document.querySelector("#two-exit-circle"), 0, [[0, 1.4], [3.2, 4.6]], [[0, 1.4], [3.2, 4.6]]);
-    stage.refresh();
-    barrierThree.paint();
-
 
 });
