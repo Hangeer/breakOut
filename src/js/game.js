@@ -1,8 +1,9 @@
 /*
 *   16-04-18
 *   需要解决的坑
-*   写法要优雅
-*   不同屏幕啥的适配不同大小的画布然后功能函数
+*   写法要优雅 赋值什么的
+*   不同屏幕啥的适配不同大小的画布
+*   然后功能函数相应改变
 * */
 
 $(document).ready(evt => {
@@ -29,7 +30,9 @@ $(document).ready(evt => {
             this.height = 568;
             this.upFlag = false;
             this.upPosLow = 250;
+
             /* 是否指定默认参数有待思考 */
+
         }
 
         refresh () {
@@ -47,7 +50,11 @@ $(document).ready(evt => {
                 this.upPosLow -= 3;
                 this.startY -= 3;
             }
-            /* 如果达到向上条件整个屏幕向下拉 3px */
+            /*
+            *   如果达到向上条件整个屏幕向下拉 3px
+            *   看背景需不需要也写成移动的
+            * */
+
         }
 
         run () {
@@ -221,6 +228,7 @@ $(document).ready(evt => {
             this.isClose = true;
 
             /* 等会用结构赋值重新写一下 */
+            //[this.context, this.width, this.height, this.img, this.direction, this.left, this.top] = [...arguments];
         }
 
         paint () {
