@@ -11,6 +11,9 @@
 *   把几个圆形画出来, 改进一下 Circle 对象
 * */
 
+$(window).on('scroll.elasticity',function (e){e.preventDefault();}).on('touchmove.elasticity',function(e){e.preventDefault();});
+/* 禁掉 webview 的拖动 */
+
 $(document).ready(evt => {
     let ev = evt || window.event;
     ev.preventDefault;
@@ -27,13 +30,21 @@ $(document).ready(evt => {
     };
     /* 伪全局对象 */
 
+    if (window.innerHeight > 568) {
+        document.querySelector("#canvas").height = window.innerHeight;
+    }
+    /*
+    *   默认屏幕宽度 320 高度 568 （ip 5）
+    *   如果屏幕高度大于 568 那么按照屏幕高度重新设置 canvas 大小
+    * */
+
     class Stage {
         constructor () {
             this.context = pub.context;
             this.startX = 0;
             this.startY = 0;
             this.width = 320;
-            this.height = 568;
+            this.height = document.querySelector("#canvas").height;
             this.upFlag = false;
             this.upPosLow = 250;
 
