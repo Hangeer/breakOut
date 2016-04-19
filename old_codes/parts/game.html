@@ -48,52 +48,36 @@
             public.canvas = document.getElementById('canvas');
             public.context = canvas.getContext('2d');
 
-            function Block (ctx, startX, startY, width, height, img, direction, left, top) {
-                var self = this;
-                self.context = ctx;
-                self.start = {
-                    x: startX,
-                    y: startY
-                };
-                self.width = width;
-                self.height = height;
-                self.img = img;
-                self.direction = direction;
-                /* true -> 向右移动 */
-                self.left = left;
-                /* 方块左边距画布左边位置 */
-                self.top = top;
-                /* 方块顶端距画布顶端位置 */
-                self.isClose = true;
-                /*  */
-            }
-            Block.prototype.paint = function () {
-                var ctx = this.context;
-                ctx.drawImage(this.img, this.left, this.top);
-            };
-            Block.prototype.move = function () {
-                var ctx = this.context;
-                ctx.clearRect(this.left, this.top, this.width, this.height);
+            var ctx = public.context;
+            ctx.beginPath();
+            ctx.arc(60, 60, 50, 0, Math.PI/4, false);
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = "#fff";
+            ctx.stroke();
 
-                this.isClose = (this.left > 150);
+            ctx.beginPath();
+            ctx.arc(60, 60, 50, Math.PI/2, Math.PI*6/8, false);
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = "#fff";
+            ctx.stroke();
 
-                if ((this.direction && this.left + this.width /2 >= 160) || (!this.direction && this.left - this.width / 2 <= 20)) {
-                    this.direction = !this.direction;
-                }
+            ctx.beginPath();
+            ctx.arc(60, 60, 50, Math.PI, Math.PI*5/4, false);
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = "#fff";
+            ctx.stroke();
 
-                this.direction ? this.left += 1 : this.left -= 1;
+            ctx.beginPath();
+            ctx.arc(60, 60, 50, Math.PI*1.5, Math.PI*1.75, false);
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = "#fff";
+            ctx.stroke();
 
-                this.paint();
-            };
-
-            var block = new Block (public.context, 100, 100, 20, 20, document.querySelector("#block"), true, 100, 100);
-            block.paint();
-//            $(document).on('click', function () {
-//                block.move();
-//            });
-            var timer = window.setInterval(function () {
-                block.move();
-            }, 100/6)
+//            ctx.beginPath();
+//            ctx.arc(60, 60, 50, Math.PI, Math.PI/1.5, true);
+//            ctx.lineWidth = 5;
+//            ctx.strokeStyle = "#fff";
+//            ctx.stroke();
 
         });
     </script>

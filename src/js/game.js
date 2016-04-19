@@ -6,6 +6,11 @@
 *   然后功能函数相应改变
 * */
 
+/*
+*   16-04-19
+*   把几个圆形画出来, 改进一下 Circle 对象
+* */
+
 $(document).ready(evt => {
     let ev = evt || window.event;
     ev.preventDefault;
@@ -15,6 +20,7 @@ $(document).ready(evt => {
         canvas: document.querySelector("#canvas"),
         context: document.querySelector("#canvas").getContext("2d"),
         timer: null,
+        run: false,
         stopTimer () {
             window.clearInterval(this.timer);
         }
@@ -64,15 +70,11 @@ $(document).ready(evt => {
             pub.timer = window.setInterval(function () {
                 stage.refresh();
                 ball.fall();
-                barrierOne.rotate();
-                barrierTwo.rotate();
-                blockOne.move();
-                stage.up(ball.top);
-                ball.collision(barrierOne.testPoint.down.y, barrierOne.testPoint.down.status);
-                ball.collision(barrierOne.testPoint.up.y, barrierOne.testPoint.up.status);
-                ball.collision(barrierTwo.testPoint.down.y, barrierOne.testPoint.down.status);
-                ball.collision(barrierTwo.testPoint.up.y, barrierOne.testPoint.up.status);
-                ball.collision(blockOne.top, blockOne.isClose);
+
+                ball.collision(barrierThree.testPoint.down.y, barrierThree.testPoint.down.status);
+                ball.collision(barrierThree.testPoint.up.y, barrierThree.testPoint.up.status);
+
+                barrierThree.rotate();
             }, 100/6);
             $(document).on('touchstart', function () {
                 ball.jump();
@@ -129,7 +131,7 @@ $(document).ready(evt => {
 
         collision (posY, status) {
             let selfY = this.getPos()[1];
-            if (Math.abs(posY - selfY) < 5 && status) {
+            if (Math.abs(posY - selfY) < 10 && status) {
                 console.log("collision");
                 console.log("game over");
                 pub.stopTimer();
@@ -191,14 +193,26 @@ $(document).ready(evt => {
 
             this.rotateDeg += .02;
 
+            //console.log(this.rotateDeg);
+
             if(this.rotateDeg >= 2 * Math.PI + this.initDegree) {
                 this.rotateDeg = this.initDegree;
             }
 
-            this.testPoint.up.status = !(this.rotateDeg >= this.testPoint.up.zone[0] && this.rotateDeg <= this.testPoint.up.zone[1]);
-            this.testPoint.down.status = !(this.rotateDeg >= this.testPoint.down.zone[0] && this.rotateDeg <= this.testPoint.down.zone[1]);
+            let upCount = 0;
+            let downCount = 0;
+
+            this.testPoint.up.zone.map(item => upCount += (this.rotateDeg >= item[0] && this.rotateDeg <= item[1]));
+            this.testPoint.down.zone.map(item => downCount += (this.rotateDeg >= item[0] && this.rotateDeg <= item[1]));
+
+            this.testPoint.up.status = !(upCount > 0);
+            this.testPoint.down.status = !(downCount > 0);
+
+            console.log("down: " + downCount + "up: " + upCount);
+
             /*
              *   圆形上下的碰撞检测
+             *   04-19 改写, 变成传递数组
              * */
 
             this.paint();
@@ -255,18 +269,32 @@ $(document).ready(evt => {
      *   左右小方块的构造函数
      * */
 
-    let barrierOne = new Circle(pub.context, 60, 50, 200, 200, document.querySelector("#circle"), 0, [3.5, 4.9], [.3, 1.8]);
-    let barrierTwo = new Circle(pub.context, 60, -350, 200, 200, document.querySelector("#circle"),0, [3.5, 4.9], [.3, 1.8]);
-    let blockOne = new Block(pub.context, 20, 20, document.querySelector("#block"), true, 100, -450);
-
-    barrierOne.paint();
-    barrierTwo.paint();
-    blockOne.paint();
+    //let stage = new Stage();
+    let ball = new Ball(pub.context, 20, 20, 400, 150, document.querySelector("#block"));
+    //let barrierOne = new Circle(pub.context, 60, 50, 200, 200, document.querySelector("#circle"), 0, [3.5, 4.9], [.3, 1.8]);
+    //let barrierTwo = new Circle(pub.context, 60, -350, 200, 200, document.querySelector("#circle"),0, [3.5, 4.9], [.3, 1.8]);
+    //let blockOne = new Block(pub.context, 20, 20, document.querySelector("#block"), true, 100, -450);
+    //
+    //stage.refresh();
+    //barrierOne.paint();
+    //barrierTwo.paint();
+    //blockOne.paint();
+    ball.paint();
+    //
+    $(document).on("click", function () {
+        if (pub.run === false) {
+            stage.run();
+            pub.run = true;
+        }
+    });
+    /*
+    *   感觉这样写不怎么优雅
+    * */
 
     let stage = new Stage();
-    let ball = new Ball(pub.context, 20, 20, 400, 150, document.querySelector("#block"));
+    let barrierThree = new Circle(pub.context, 110, 50, 100, 100, document.querySelector("#two-exit-circle"), 0, [[0, 1.4], [3.2, 4.6]], [[0, 1.4], [3.2, 4.6]]);
+    stage.refresh();
+    barrierThree.paint();
 
-    ball.paint();
-    stage.run();
 
 });
