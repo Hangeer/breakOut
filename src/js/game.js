@@ -1,14 +1,12 @@
 /*
-*   16-04-18
-*   需要解决的坑
-*   写法要优雅 赋值什么的
-*   不同屏幕啥的适配不同大小的画布
-*   然后功能函数相应改变
-* */
-
-/*
 *   16-04-19
-*   把几个圆形画出来, 改进一下 Circle 对象
+*   需要解决的坑
+*
+*   等正式代码出来了在考虑 优雅代码吧 = =
+*   然后功能函数相应改变
+*
+*   明天把 block 写了
+*
 * */
 
 $(window).on('scroll.elasticity',function (e){e.preventDefault();}).on('touchmove.elasticity',function(e){e.preventDefault();});
@@ -302,10 +300,13 @@ $(document).ready(evt => {
 
     stage.refresh();
 
-    barrierOne.paint();
-    barrierTwo.paint();
-    barrierThree.paint();
-    ball.paint();
+    window.setTimeout(function () {
+        barrierOne.paint();
+        barrierTwo.paint();
+        barrierThree.paint();
+        ball.paint();
+    }, 50);
+    /* 在 refresh 之后延时加载, 避免被擦掉 */
 
     //blockOne.paint();
 
