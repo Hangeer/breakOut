@@ -1,12 +1,13 @@
 /*
-*   16-04-19
+*   16-04-20
 *   需要解决的坑
 *
 *   等正式代码出来了在考虑 优雅代码吧 = =
 *   然后功能函数相应改变
 *
-*   明天把 block 写了
-*
+*   小块啥的已经解决了
+*   然后就是食物和关数的问题
+*   还有些优化啥的问题
 * */
 
 $(window).on('scroll.elasticity',function (e){e.preventDefault();}).on('touchmove.elasticity',function(e){e.preventDefault();});
@@ -94,8 +95,12 @@ $(document).ready(evt => {
                 barrierThree.rotate();
 
                 ball.collision(barrierFour_one.top, barrierFour_one.isClose);
+                /* 两个一组的就判断一个吧 */
                 barrierFour_one.move();
                 barrierFour_two.move();
+
+                ball.collision(barrierFive.top, barrierFive.isClose);
+                barrierFive.move();
 
             }, 100/6);
 
@@ -276,6 +281,9 @@ $(document).ready(evt => {
 
         paint () {
             this.context.drawImage(this.img, this.left, this.top);
+
+            ball.paint();
+            /* 日常重绘小球 */
         }
 
         move () {
@@ -314,6 +322,7 @@ $(document).ready(evt => {
     let barrierThree = new Circle(pub.context, 110, -500, 100, 100, document.querySelector("#two-exit-circle"), 0, [[0, 1.4], [3.2, 4.6]], [[0, 1.4], [3.2, 4.6]]);
     let barrierFour_one = new Block(pub.context, 50, -650, 25, 5, document.querySelector("#single-block"), true, 50, 147.5, [[137.5, 147.5]]);
     let barrierFour_two = new Block(pub.context, 245, -650, 25, 5, document.querySelector("#single-block"), false, 172.5, 270, [[172.5, 182.5]]);
+    let barrierFive = new Block(pub.context, 50, -800, 150, 10, document.querySelector("#two-blocks"), true, 105.5, 214.5, [[105.5, 134.5], [184.5, 214.5]]);
 
     stage.refresh();
 
