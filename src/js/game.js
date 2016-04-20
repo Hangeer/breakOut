@@ -261,6 +261,7 @@ $(document).ready(evt => {
             this.top = top;
             /* 方块顶端距画布顶端位置 */
             this.isClose = true;
+            /* isClose 能否碰撞 */
 
             /* 等会用结构赋值重新写一下 */
             //[this.context, this.width, this.height, this.img, this.direction, this.left, this.top] = [...arguments];
