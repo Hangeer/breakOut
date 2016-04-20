@@ -48,7 +48,21 @@
             public.canvas = document.getElementById('canvas');
             public.context = canvas.getContext('2d');
 
+            var ctx = public.context;
 
+            ctx.beginPath();
+            ctx.moveTo(50,100);
+            ctx.lineTo(100,100);
+
+            ctx.moveTo(150,100);
+            ctx.lineTo(200,100);
+
+            ctx.moveTo(250,100);
+            ctx.lineTo(300,100);
+
+            ctx.strokeStyle="#fff";
+            ctx.lineWidth = 10;
+            ctx.stroke();
 
         });
     </script>

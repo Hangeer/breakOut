@@ -93,7 +93,9 @@ $(document).ready(evt => {
                 ball.collision(barrierThree.testPoint.up.y, barrierThree.testPoint.up.status);
                 barrierThree.rotate();
 
-
+                ball.collision(barrierFour_one.top, barrierFour_one.isClose);
+                barrierFour_one.move();
+                barrierFour_two.move();
 
             }, 100/6);
 
@@ -249,17 +251,22 @@ $(document).ready(evt => {
     * */
 
     class Block {
-        constructor (context, width, height, img, direction, left, top) {
+        constructor (context, left, top, width, height, img, direction, maxLeft, maxRight, zone) {
             this.context = context;
+            this.left = left;
+            /* 方块左边距画布左边位置 */
+            this.top = top;
+            /* 方块顶端距画布顶端位置 */
             this.width = width;
             this.height = height;
             this.img = img;
             this.direction = direction;
             /* true -> 向右移动 */
-            this.left = left;
-            /* 方块左边距画布左边位置 */
-            this.top = top;
-            /* 方块顶端距画布顶端位置 */
+            this.maxLeft = maxLeft;
+            this.maxRight = maxRight;
+            this.zone = zone;
+            /* 空隙区域 数组 */
+
             this.isClose = true;
             /* isClose 能否碰撞 */
 
@@ -272,16 +279,25 @@ $(document).ready(evt => {
         }
 
         move () {
+            let center = this.left + this.width / 2;
+            /* 图形的中心点 */
+            let count = 0;
+            /* 这是一个标记, 用来判断碰撞 */
+
             this.context.clearRect(this.left, this.top, this.width, this.height);
 
-            this.isClose = (this.left > 140);
-            /* 这里的判断是手写的, 需要改进 */
 
-            if ((this.direction && this.left + this.width /2 >= 160) || (!this.direction && this.left - this.width / 2 <= 20)) {
+            this.zone.map(item => count +=  (center >= item[0] && center <= item[1]));
+            this.isClose = (count > 0);
+            /* 判断是否能够碰撞 */
+
+            if ((this.direction && center >= this.maxRight) || (!this.direction && center <= this.maxLeft)) {
                 this.direction = !this.direction;
             }
 
             this.direction ? this.left += 1 : this.left -= 1;
+
+            //console.log(this.isClose);
 
             this.paint();
         }
@@ -296,20 +312,16 @@ $(document).ready(evt => {
     let barrierOne = new Circle(pub.context, 60, 50, 200, 200, document.querySelector("#circle"), 0, [[3.5, 4.9]], [[.3, 1.8]]);
     let barrierTwo = new Circle(pub.context, 85, -250, 150, 150, document.querySelector("#four-exit-circle"), 0, [[0, .7], [1.5, 2.2], [3, 3.7], [4.5, 5.2]], [[0, .7], [1.5, 2.2], [3, 3.7], [4.5, 5.2]]);
     let barrierThree = new Circle(pub.context, 110, -500, 100, 100, document.querySelector("#two-exit-circle"), 0, [[0, 1.4], [3.2, 4.6]], [[0, 1.4], [3.2, 4.6]]);
-
-    //let blockOne = new Block(pub.context, 20, 20, document.querySelector("#block"), true, 100, -450);
+    let barrierFour_one = new Block(pub.context, 50, -650, 25, 5, document.querySelector("#single-block"), true, 50, 147.5, [[137.5, 147.5]]);
+    let barrierFour_two = new Block(pub.context, 245, -650, 25, 5, document.querySelector("#single-block"), false, 172.5, 270, [[172.5, 182.5]]);
 
     stage.refresh();
 
     window.setTimeout(function () {
-        barrierOne.paint();
-        barrierTwo.paint();
-        barrierThree.paint();
         ball.paint();
+        barrierOne.paint();
     }, 50);
-    /* 在 refresh 之后延时加载, 避免被擦掉 */
-
-    //blockOne.paint();
+    /* 在 refresh 之后延时加载, 避免被擦掉, 只用画第一关, 其他的画了也看不到 */
 
     $(document).on("touchstart", function () {
         if (pub.run === false) {
