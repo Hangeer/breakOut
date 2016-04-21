@@ -77,15 +77,22 @@ $(document).ready(() => {
             pub.timer = window.setInterval(function () {
                 stage.refresh();
                 stage.up(ball.getPos()[1]);
-                ball.fall();
 
                 ball.collision(barrierOne.testPoint.down.y, barrierOne.testPoint.down.status);
                 ball.collision(barrierOne.testPoint.up.y, barrierOne.testPoint.up.status);
                 barrierOne.rotate();
 
+                foodOne.eat(ball.top + ball.height / 2 );
+                //console.log(ball.top + ball.height / 2);
+                /*
+                *   食物写的顺序要注意, 在圆圈转动之后写
+                * */
+
                 ball.collision(barrierTwo.testPoint.down.y, barrierTwo.testPoint.down.status);
                 ball.collision(barrierTwo.testPoint.up.y, barrierTwo.testPoint.up.status);
                 barrierTwo.rotate();
+
+                foodTwo.eat(ball.top + ball.height / 2 );
 
                 ball.collision(barrierThree.testPoint.down.y, barrierThree.testPoint.down.status);
                 ball.collision(barrierThree.testPoint.up.y, barrierThree.testPoint.up.status);
@@ -98,6 +105,8 @@ $(document).ready(() => {
 
                 ball.collision(barrierFive.top, barrierFive.isClose);
                 barrierFive.move();
+
+                ball.fall();
 
             }, 100/6);
 
@@ -242,8 +251,10 @@ $(document).ready(() => {
 
             this.paint();
 
-            /* 差一个重绘 ball 的函数 */
-            ball.paint();
+            //ball.paint();
+            /*
+            *   在 up 函数中把 ball.paint 写在最后, 解决这个需要重绘的问题
+            * */
         }
     }
     /*
@@ -279,8 +290,10 @@ $(document).ready(() => {
         paint () {
             this.context.drawImage(this.img, this.left, this.top);
 
-            ball.paint();
-            /* 日常重绘小球 */
+            //ball.paint();
+            /*
+            *   重绘小球问题已经解决
+            * */
         }
 
         move () {
@@ -312,6 +325,40 @@ $(document).ready(() => {
      *   左右小方块的构造函数
      * */
 
+    class Food {
+        constructor (context, left, top, width, height, img) {
+            this.context = context;
+            this.left = left;
+            this.top = top;
+            this.width = width;
+            this.height = height;
+            this.img = img;
+            this.isAte = false;
+        }
+
+        paint () {
+            this.context.drawImage(this.img, this.left, this.top);
+        }
+
+        eat (ballY) {
+            var centerY = this.top + this.height / 2;
+            console.log(centerY);
+
+            if (Math.abs(centerY - ballY) < 5) {
+                this.isAte = true;
+            }
+
+            if (!this.isAte) {
+                this.paint();
+            }
+        }
+
+    }
+    /*
+    *   Food
+    *   食物的构造函数
+    * */
+
     let stage = new Stage();
     let ball = new Ball(pub.context, 20, 20, 400, 150, document.querySelector("#block"));
     let barrierOne = new Circle(pub.context, 60, 50, 200, 200, document.querySelector("#circle"), 0, [[3.5, 4.9]], [[.3, 1.8]]);
@@ -321,11 +368,15 @@ $(document).ready(() => {
     let barrierFour_two = new Block(pub.context, 245, -650, 25, 5, document.querySelector("#single-block"), false, 172.5, 270, [[172.5, 182.5]]);
     let barrierFive = new Block(pub.context, 50, -800, 150, 10, document.querySelector("#two-blocks"), true, 105.5, 214.5, [[105.5, 134.5], [184.5, 214.5]]);
 
+    let foodOne = new Food(pub.context, 150, 140, 20, 20, document.querySelector("#block"));
+    let foodTwo = new Food(pub.context, 150, -190, 20, 20, document.querySelector("#block"));
+
     stage.refresh();
 
     window.setTimeout(function () {
         ball.paint();
         barrierOne.paint();
+        foodOne.paint();
     }, 50);
     /* 在 refresh 之后延时加载, 避免被擦掉, 只用画第一关, 其他的画了也看不到 */
 
