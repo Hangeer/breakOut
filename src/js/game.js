@@ -13,10 +13,7 @@
 $(window).on('scroll.elasticity',function (e){e.preventDefault();}).on('touchmove.elasticity',function(e){e.preventDefault();});
 /* 禁掉 webview 的拖动 */
 
-$(document).ready(evt => {
-    let ev = evt || window.event;
-    ev.preventDefault;
-    /* 阻止默认事件 */
+$(document).ready(() => {
 
     let pub = {
         canvas: document.querySelector("#canvas"),
