@@ -1,13 +1,13 @@
 /*
-*   16-04-20
+*   16-04-21
 *   需要解决的坑
 *
 *   等正式代码出来了在考虑 优雅代码吧 = =
 *   然后功能函数相应改变
 *
-*   小块啥的已经解决了
-*   然后就是食物和关数的问题
-*   还有些优化啥的问题
+*   食物也 ok 了
+*   然后就是还有些优化啥的问题
+*   以及显示,计时什么的,尝试使用异步函数解决
 * */
 
 $(window).on('scroll.elasticity',function (e){e.preventDefault();}).on('touchmove.elasticity',function(e){e.preventDefault();});
@@ -107,6 +107,10 @@ $(document).ready(() => {
                 barrierFive.move();
 
                 ball.fall();
+                /*
+                *   通关的过程可以尝试使用异步函数重新写一下
+                *   每次通过一个障碍/吃掉一个东西,就更新自己的状态
+                * */
 
             }, 100/6);
 
