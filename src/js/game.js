@@ -1,5 +1,5 @@
 /*
-*   16-04-21
+*   16-04-23
 *   需要解决的坑
 *
 *   等正式代码出来了在考虑 优雅代码吧 = =
@@ -8,6 +8,11 @@
 *   食物也 ok 了
 *   然后就是还有些优化啥的问题
 *   以及显示,计时什么的,尝试使用异步函数解决
+*
+*   圆环试一下动态生成, 页面上只保留游戏时运行需要的部分
+*   使用 队列 试一下, 不要渲染全屏
+*
+*   等图出来再说吧 23333333
 * */
 
 $(window).on('scroll.elasticity',function (e){e.preventDefault();}).on('touchmove.elasticity',function(e){e.preventDefault();});
