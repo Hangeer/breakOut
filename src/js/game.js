@@ -12,7 +12,7 @@
 *   圆环试一下动态生成, 页面上只保留游戏时运行需要的部分
 *   使用 队列 试一下, 不要渲染全屏
 *
-*   等图出来再说吧 23333333
+*   如果每一关失败之后显示内容, 把文字写好, 然后使用 CSS3 写动画来做弹窗什么的
 * */
 
 $(window).on('scroll.elasticity',function (e){e.preventDefault();}).on('touchmove.elasticity',function(e){e.preventDefault();});
@@ -389,7 +389,7 @@ $(document).ready(() => {
     }, 50);
     /* 在 refresh 之后延时加载, 避免被擦掉, 只用画第一关, 其他的画了也看不到 */
 
-    $(document).on("touchstart", function () {
+    $("#container").on("touchstart", function () {
         if (pub.run === false) {
             stage.run();
             pub.run = true;
@@ -397,6 +397,16 @@ $(document).ready(() => {
     });
     /*
     *   感觉这样写不怎么优雅
+    * */
+
+    $("#pause").on("click", function () {
+        pub.stopTimer();
+    });
+    $("#continue").on("click", function () {
+        stage.run();
+    });
+    /*
+    *   手动加的按钮,测试是否能够暂停/继续游戏
     * */
 
 });
