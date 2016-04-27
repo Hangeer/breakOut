@@ -1,0 +1,1 @@
+"use strict";!function(){var t=document.querySelector("#start");t.addEventListener("touchstart",function(){t.innerHTML="不要慌,劳资在跳转",setTimeout(function(){window.location.href="../html/game.html"},1e3)})}();

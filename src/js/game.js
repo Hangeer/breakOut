@@ -401,12 +401,20 @@ $(document).ready(() => {
 
     $("#pause").on("click", function () {
         pub.stopTimer();
+        $("#cover").toggleClass("cover-show");
     });
     $("#continue").on("click", function () {
-        stage.run();
+        $("#cover").toggleClass("cover-show");
+        setTimeout(function () {
+            stage.run();
+        }, 500);
     });
     /*
     *   手动加的按钮,测试是否能够暂停/继续游戏
+    *   还差游戏控制器来控制暂停什么的
+    *
+    *   比如 游戏加个是否已经开始玩的 flag 避免按暂停按钮的时候出现混乱
+    *   死了之后不能按暂停按钮, 防止作弊
     * */
 
 });
