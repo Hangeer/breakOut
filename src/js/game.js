@@ -25,11 +25,17 @@ $(document).ready(() => {
         context: document.querySelector("#canvas").getContext("2d"),
         timer: null,
         run: false,
+        isStart: false,
         stopTimer () {
             window.clearInterval(this.timer);
         }
     };
-    /* 伪全局对象 */
+    /*
+    *   伪全局对象
+    *   timer 刷新幕布的计时器
+    *   run 是否在跑
+    *   isStart 是否已经开始了（防止开始之前暂停）
+    */
 
     if (window.innerHeight > 568) {
         document.querySelector("#canvas").height = window.innerHeight;
@@ -178,6 +184,11 @@ $(document).ready(() => {
                 console.log("collision");
                 console.log("game over");
                 pub.stopTimer();
+
+                $("#continue").css({"display": "none"});
+                $("#cover").addClass("cover-show");
+                /* 游戏完了之后,重新开始的那个啥 */
+
             }
         }
     }
@@ -383,31 +394,38 @@ $(document).ready(() => {
     stage.refresh();
 
     window.setTimeout(function () {
-        ball.paint();
         barrierOne.paint();
+        ball.paint();
         foodOne.paint();
-    }, 50);
+    }, 200);
     /* 在 refresh 之后延时加载, 避免被擦掉, 只用画第一关, 其他的画了也看不到 */
 
     $("#container").on("touchstart", function () {
         if (pub.run === false) {
             stage.run();
             pub.run = true;
+            pub.isStart = true;
         }
     });
     /*
     *   感觉这样写不怎么优雅
+    *   用异步, 解决刷新的时候食物和星星不出来的问题
     * */
 
-    $("#pause").on("click", function () {
+    $("#pause").on("touchstart", function () {
         pub.stopTimer();
         $("#cover").toggleClass("cover-show");
     });
-    $("#continue").on("click", function () {
+    $("#continue").on("touchstart", function () {
         $("#cover").toggleClass("cover-show");
-        setTimeout(function () {
-            stage.run();
-        }, 500);
+        if (pub.isStart) {
+            setTimeout(function () {
+                stage.run();
+            }, 500);
+        }
+    });
+    $("#restart").on("touchstart", function () {
+        window.location.href = "";
     });
     /*
     *   手动加的按钮,测试是否能够暂停/继续游戏
@@ -415,6 +433,8 @@ $(document).ready(() => {
     *
     *   比如 游戏加个是否已经开始玩的 flag 避免按暂停按钮的时候出现混乱
     *   死了之后不能按暂停按钮, 防止作弊
+    *
+    *   直接用 window.location.href = "" 来重新开始
     * */
 
 });
