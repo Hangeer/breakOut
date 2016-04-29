@@ -14,3 +14,40 @@ h1 {
   font-size: 40px;
   text-align: center;
 }
+.cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(123, 123, 222, 0.5);
+  z-index: 100;
+}
+@keyframes loading {
+  //from {
+  //  transform: scale(1);
+  //}
+  //to {
+  //  transform: scale(2);
+  //}
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(2) rotate(180deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+  }
+}
+.load {
+  position: absolute;
+  width: 100px;
+  height:100px;
+  top: 50%;
+  left: 50%;
+  margin-top: -50px;
+  margin-left: -50px;
+  background-color: #00cc99;
+  animation: loading 2s infinite;
+}

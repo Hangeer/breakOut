@@ -425,7 +425,7 @@ $(document).ready(() => {
         }
     });
     $("#restart").on("touchstart", function () {
-        window.location.href = "";
+        window.location.reload();
     });
     /*
     *   手动加的按钮,测试是否能够暂停/继续游戏
