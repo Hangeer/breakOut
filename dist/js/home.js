@@ -1,1 +1,1 @@
-"use strict";window.onload=function(){function o(o){var n=document.createElement("script");n.src=o,document.body.appendChild(n)}var n=new Promise(function(n,e){o("./zepto.js"),console.log("zepto ok"),n()});n.then(function(){o("./game.js"),console.log("game.js loaded")},function(){console.log("failed to load game.js")}).then(function(){setTimeout(function(){console.log(233)},500)},function(){console.log("failed")})};
+"use strict";
