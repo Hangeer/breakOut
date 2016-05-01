@@ -64,14 +64,6 @@
   height: 100%;
   background: url(../imgs/home-background.png) no-repeat;
   background-size: 100%;
-  .banner {
-    width: 70%;
-    height: 75%;
-    margin: 0 auto;
-    margin-top: 8%;
-    background: url(../imgs/home-banner.png) no-repeat;
-    background-size: 100%;
-  }
   @keyframes bounce {
     60% {
       transform: scale(1.1);
@@ -84,5 +76,59 @@
     animation: bounce .5s;
   }
   /* banner 强行蹦一下 */
+  .banner {
+    width: 70%;
+    height: 75%;
+    margin: 0 auto;
+    margin-top: 8%;
+    background: url(../imgs/home-banner.png) no-repeat;
+    background-size: 100%;
+  }
+  @media (min-aspect-ratio: 3/5) {
+    .banner {
+      width: 60%;
+      height: 63%;
+      margin-top: 5%;
+    }
+  }
+  /* 宽高比比较方的屏幕 比如说 iphone4 */
+
+  .stars_1 {
+    position: absolute;
+    width: 25px;
+    height: 65px;
+    left: 10%;
+    top: 45%;
+    background: url(../imgs/stars_1.png) no-repeat;
+    background-size: 100%;
+  }
+  .stars_2 {
+    position: absolute;
+    width: 35px;
+    height: 100px;
+    right: 6%;
+    top: 25%;
+    background: url(../imgs/stars_2.png) no-repeat;
+    background-size: 100%;
+  }
+  .stars_3 {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: 12%;
+    top: 55.5%;
+    background: url(../imgs/stars_3.png) no-repeat;
+    background-size: 100%;
+    animation: star_rotate  2s linear infinite;
+    //animation-timing-function: ease;
+  }
+  @keyframes star_rotate {
+    50% {
+      transform: rotate(180deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 }
 /* 真正首页界面的 container */
