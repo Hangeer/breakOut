@@ -1,0 +1,1 @@
+"use strict";$(document).ready(function(){var e=$("#cover"),n=$("#banner");setTimeout(function(){e.addClass("cover-hide")},1e3),setTimeout(function(){n.addClass("banner-bounce")},2e3),$(window).on("scroll.elasticity",function(e){e.preventDefault()}).on("touchmove.elasticity",function(e){e.preventDefault()})});

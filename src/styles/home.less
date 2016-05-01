@@ -1,0 +1,88 @@
+/*
+  游戏界面啥的直接用 max-width 先定宽
+*/
+
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+/* 整个 page 的 container */
+
+.cover {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  transition: top 1s;
+  @keyframes load {
+    50% {
+      transform: scale(.5) rotate(180deg);
+    }
+    100% {
+      transform: scale(1) rotate(720deg);
+    }
+  }
+  .loading {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: #6c9a9d;
+    left: 50%;
+    top: 30%;
+    margin-left: -50px;
+    border-radius: 20px;
+    animation: load 3s infinite;
+  }
+  .words {
+    position: absolute;
+    width: 100%;
+    top: 65%;
+    line-height: 30px;
+    font-size: 25px;
+    color: #fff;
+    text-align: center;
+  }
+}
+.cover-hide {
+  top: -100%;
+}
+/* 给 cover 的 loading 界面 */
+
+.homepage {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: url(../imgs/home-background.png) no-repeat;
+  background-size: 100%;
+  .banner {
+    width: 70%;
+    height: 75%;
+    margin: 0 auto;
+    margin-top: 8%;
+    background: url(../imgs/home-banner.png) no-repeat;
+    background-size: 100%;
+  }
+  @keyframes bounce {
+    60% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  .banner-bounce {
+    animation: bounce .5s;
+  }
+  /* banner 强行蹦一下 */
+}
+/* 真正首页界面的 container */
