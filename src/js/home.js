@@ -4,10 +4,13 @@ $(document).ready(() => {
 
     setTimeout(function () {
         $cover.addClass("cover-hide");
-    }, 1000);
+    }, 2000);
     setTimeout(function () {
         $banner.addClass("banner-bounce");
-    }, 2000);
+        $(".stars_3").addClass("rotate-linear");
+        $(".start").addClass("start-after");
+        $(".intro").addClass("intro-after");
+    }, 3000);
     /* 先写效果 然后再看 */
 
 

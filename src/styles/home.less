@@ -7,6 +7,9 @@
   margin: 0;
   padding: 0;
 }
+html {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
 
 .container {
   position: absolute;
@@ -21,7 +24,7 @@
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, .5);
   z-index: 10;
   transition: top 1s;
   @keyframes load {
@@ -29,14 +32,14 @@
       transform: scale(.5) rotate(180deg);
     }
     100% {
-      transform: scale(1) rotate(720deg);
+      transform: scale(1) rotate(450deg);
     }
   }
   .loading {
     position: absolute;
     width: 100px;
     height: 100px;
-    background-color: #6c9a9d;
+    background-color: #ff9619;
     left: 50%;
     top: 30%;
     margin-left: -50px;
@@ -78,7 +81,7 @@
   /* banner 强行蹦一下 */
   .banner {
     width: 70%;
-    height: 75%;
+    height: 65%;
     margin: 0 auto;
     margin-top: 8%;
     background: url(../imgs/home-banner.png) no-repeat;
@@ -87,7 +90,7 @@
   @media (min-aspect-ratio: 3/5) {
     .banner {
       width: 60%;
-      height: 63%;
+      height: 65%;
       margin-top: 5%;
     }
   }
@@ -119,8 +122,18 @@
     top: 55.5%;
     background: url(../imgs/stars_3.png) no-repeat;
     background-size: 100%;
+  }
+  .stars_4 {
+    position: absolute;
+    width: 30px;
+    height: 33px;
+    right: 22%;
+    top: 78%;
+    background: url(../imgs/stars_4.png) no-repeat;
+    background-size: 100%;
+  }
+  .rotate-linear {
     animation: star_rotate  2s linear infinite;
-    //animation-timing-function: ease;
   }
   @keyframes star_rotate {
     50% {
@@ -130,5 +143,64 @@
       transform: rotate(360deg);
     }
   }
+  /* 星星们 */
+
+  .start {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    margin-left: -83px;
+    width: 167px;
+    height: 60px;
+    background: url(../imgs/start.png) no-repeat;
+    background-size: 100%;
+  }
+  .intro {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    margin-left: -83px;
+    width: 167px;
+    height: 60px;
+    background: url(../imgs/intro.png) no-repeat;
+    background-size: 100%;
+  }
+  .start-after {
+    animation: start-up 1s;
+    top: 0;
+  }
+  .intro-after {
+    animation: intro-up 1.2s;
+    top: 10px;
+  }
+  @keyframes start-up {
+    from {
+      top: 50%;
+    }
+    to {
+      top: 0;
+    }
+  }
+  @keyframes intro-up {
+    from {
+      top: 50%;
+    }
+    to {
+      top: 10px;
+    }
+  }
+  @media (min-width: 360px) {
+    .start {
+      margin-left: -93px;
+      width: 185px;
+      height: 67px;
+    }
+    .intro {
+      margin-left: -93px;
+      width: 185px;
+      height: 67px;
+    }
+  }
+  /* 开始 游戏介绍 按钮 */
 }
 /* 真正首页界面的 container */
