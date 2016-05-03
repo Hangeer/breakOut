@@ -1,3 +1,17 @@
+/*
+*   16-05-03
+*
+*   是否手机设备
+*   计时的东西
+*   首页适配, 动画效果
+*   canvas 性能问题, 把食物写成队列, 到指定位置的时候再渲染
+*
+*   星星掉出屏幕外的判定
+*   星星相对屏幕的位置, 根据手机高度判定
+*
+* */
+
+
 $(window).on('scroll.elasticity',function (e){e.preventDefault();}).on('touchmove.elasticity',function(e){e.preventDefault();});
 /* 禁掉 webview 的拖动 */
 
@@ -9,6 +23,7 @@ $(document).ready(() => {
         timer: null,
         run: false,
         isStart: false,
+        playgroundHeight: window.innerHeight,
         stopTimer () {
             window.clearInterval(this.timer);
         }
@@ -18,6 +33,7 @@ $(document).ready(() => {
      *   timer 刷新幕布的计时器
      *   run 是否在跑
      *   isStart 是否已经开始了（防止开始之前暂停）
+     *   playgroundHeight 可见区域的高度（用来判断是否掉出屏幕外
      */
 
     if (window.innerHeight > 568) {
@@ -38,7 +54,7 @@ $(document).ready(() => {
             this.width = 320;
             this.height = document.querySelector("#canvas").height;
             this.upFlag = false;
-            this.upPosLow = 250;
+            this.upPosLow = window.innerHeight/2;
 
             /* 是否指定默认参数有待思考 */
 
@@ -58,6 +74,8 @@ $(document).ready(() => {
                 this.context.translate(0, 3);
                 this.upPosLow -= 3;
                 this.startY -= 3;
+
+                pub.playgroundHeight -= 3;
             }
             /*
              *   如果达到向上条件整个屏幕向下拉 3px
@@ -158,7 +176,7 @@ $(document).ready(() => {
         }
 
         isEnd () {
-            if (this.top > 600) {
+            if (this.top > pub.playgroundHeight) {
                 console.log("Fall down game over");
                 /* 这里还有一个停止计时的代码 */
                 pub.stopTimer();
@@ -371,7 +389,7 @@ $(document).ready(() => {
     const imgRope = document.querySelector("#img-rope");
 
     const stage = new Stage();
-    const star = new Ball(pub.context, 30, 30, 400, 145, imgStar);
+    const star = new Ball(pub.context, 30, 30, window.innerHeight - 150, 145, imgStar);
     const rope_one = new Block(pub.context, 0, 200, 80, 13, imgRope, true, 40, 120, [[105, 120]]);
     const rope_two = new Block(pub.context, 240, 200, 80, 13, imgRope, true, 200, 280, [[200, 215]]);
 
