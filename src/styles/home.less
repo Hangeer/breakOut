@@ -1,7 +1,7 @@
 /*
   游戏界面啥的直接用 max-width 先定宽
 
-  translate3d 或者 transition 代替 keyframes 动画
+  到时候再看需不需要去掉动画吧
 */
 
 
@@ -32,7 +32,7 @@ html {
   background-color: rgba(0, 0, 0, .5);
   z-index: 10;
   transform: translate3d(0, 0, 0);
-  transition: transform 1s linear;
+  transition: transform 1s;
   @keyframes load {
     50% {
       transform: scale(.5) rotate(180deg);
