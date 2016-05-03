@@ -3,7 +3,7 @@ $(window).on('scroll.elasticity',function (e){e.preventDefault();}).on('touchmov
 
 $(document).ready(() => {
 
-    let pub = {
+    const pub = {
         canvas: document.querySelector("#canvas"),
         context: document.querySelector("#canvas").getContext("2d"),
         timer: null,
@@ -26,6 +26,8 @@ $(document).ready(() => {
     /*
      *   默认屏幕宽度 320 高度 568 （ip 5）
      *   如果屏幕高度大于 568 那么按照屏幕高度重新设置 canvas 大小
+     *
+     *   这里也可以加上对于 小球的位置的判断
      * */
 
     class Stage {
@@ -372,19 +374,6 @@ $(document).ready(() => {
     const star = new Ball(pub.context, 30, 30, 400, 145, imgStar);
     const rope_one = new Block(pub.context, 0, 200, 80, 13, imgRope, true, 40, 120, [[105, 120]]);
     const rope_two = new Block(pub.context, 240, 200, 80, 13, imgRope, true, 200, 280, [[200, 215]]);
-
-    //let ball = new Ball(pub.context, 20, 20, 400, 150, document.querySelector("#block"));
-    //let barrierOne = new Circle(pub.context, 60, 50, 200, 200, document.querySelector("#circle"), 0, [[3.5, 4.9]], [[.3, 1.8]]);
-    //let barrierTwo = new Circle(pub.context, 85, -250, 150, 150, document.querySelector("#four-exit-circle"), 0, [[0, .7], [1.5, 2.2], [3, 3.7], [4.5, 5.2]], [[0, .7], [1.5, 2.2], [3, 3.7], [4.5, 5.2]]);
-    //let barrierThree = new Circle(pub.context, 110, -500, 100, 100, document.querySelector("#two-exit-circle"), 0, [[0, 1.4], [3.2, 4.6]], [[0, 1.4], [3.2, 4.6]]);
-    //let barrierFour_one = new Block(pub.context, 50, -650, 25, 5, document.querySelector("#single-block"), true, 50, 147.5, [[137.5, 147.5]]);
-    //let barrierFour_two = new Block(pub.context, 245, -650, 25, 5, document.querySelector("#single-block"), false, 172.5, 270, [[172.5, 182.5]]);
-    //let barrierFive = new Block(pub.context, 50, -800, 150, 10, document.querySelector("#two-blocks"), true, 105.5, 214.5, [[105.5, 134.5], [184.5, 214.5]]);
-    //
-    //let foodOne = new Food(pub.context, 150, 140, 20, 20, document.querySelector("#block"));
-    //let foodTwo = new Food(pub.context, 150, -190, 20, 20, document.querySelector("#block"));
-
-
 
     stage.refresh();
 

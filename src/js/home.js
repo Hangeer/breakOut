@@ -15,9 +15,11 @@ $(document).ready(() => {
     setTimeout(function () {
         $banner.addClass("banner-bounce");
         $(".stars_3").addClass("rotate-linear");
+    }, 3000);
+    setTimeout(function () {
         $("#start").addClass("start-after");
         $("#intro").addClass("intro-after");
-    }, 3000);
+    }, 4000);
     /* 先写效果 然后再看 */
 
     $("#start").on("touchstart", () => {
