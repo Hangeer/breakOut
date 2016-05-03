@@ -21,7 +21,6 @@ html {
 
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
-  perspective: 1000;
 }
 /* 整个 page 的 container */
 
@@ -32,7 +31,8 @@ html {
   height: 100%;
   background-color: rgba(0, 0, 0, .5);
   z-index: 10;
-  transition: top 1s;
+  transform: translate3d(0, 0, 0);
+  transition: transform 1s;
   @keyframes load {
     50% {
       transform: scale(.5) rotate(180deg);
@@ -63,7 +63,7 @@ html {
   }
 }
 .cover-hide {
-  top: -100%;
+  transform: translate3d(0, -100%, 0);
 }
 /* 给 cover 的 loading 界面 */
 
