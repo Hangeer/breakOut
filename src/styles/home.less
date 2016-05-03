@@ -153,7 +153,8 @@ html {
 
   .start {
     position: relative;
-    top: 50%;
+    top: 0;
+    transform: translate3d(0, 200px, 0);
     left: 50%;
     margin-left: -83px;
     width: 167px;
@@ -163,7 +164,8 @@ html {
   }
   .intro {
     position: relative;
-    top: 50%;
+    top: 10px;
+    transform: translate3d(0, 200px, 0);
     left: 50%;
     margin-left: -83px;
     width: 167px;
@@ -172,12 +174,12 @@ html {
     background-size: 100%;
   }
   .start-after {
-    transition: top 1s;
-    top: 0;
+    transition: transform 1s;
+    transform: translate3d(0, 0, 0) !important;
   }
   .intro-after {
-    transition: top 1.2s;
-    top: 10px;
+    transition: transform 1.2s;
+    transform: translate3d(0, 0, 0) !important;
   }
   @media (min-width: 360px) {
     .start {
@@ -189,6 +191,22 @@ html {
       margin-left: -93px;
       width: 185px;
       height: 67px;
+    }
+  }
+  @media (min-height: 650px) {
+    .start {
+      transform: translate3d(0, 300px, 0);
+    }
+    .intro {
+      transform: translate3d(0, 300px, 0);
+    }
+  }
+  @media (min-height: 850px) {
+    .start {
+      transform: translate3d(0, 350px, 0);
+    }
+    .intro {
+      transform: translate3d(0, 350px, 0);
     }
   }
   /* 开始 游戏介绍 按钮 */
