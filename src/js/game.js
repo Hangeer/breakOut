@@ -390,8 +390,8 @@ $(document).ready(() => {
 
     const stage = new Stage();
     const star = new Ball(pub.context, 30, 30, window.innerHeight - 150, 145, imgStar);
-    const rope_one = new Block(pub.context, 0, 200, 80, 13, imgRope, true, 40, 120, [[105, 120]]);
-    const rope_two = new Block(pub.context, 240, 200, 80, 13, imgRope, true, 200, 280, [[200, 215]]);
+    const rope_one = new Block(pub.context, 0, window.innerHeight - 300, 80, 13, imgRope, true, 40, 120, [[105, 120]]);
+    const rope_two = new Block(pub.context, 240, window.innerHeight - 300, 80, 13, imgRope, true, 200, 280, [[200, 215]]);
 
     stage.refresh();
 

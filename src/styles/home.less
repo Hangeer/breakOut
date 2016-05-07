@@ -80,7 +80,7 @@ html {
   /* banner 强行蹦一下 */
   .banner {
     width: 70%;
-    height: 65%;
+    height: 66%;
     margin: 0 auto;
     margin-top: 8%;
     background: url(../imgs/home-banner.png) no-repeat;
@@ -93,7 +93,14 @@ html {
       margin-top: 5%;
     }
   }
-  /* 宽高比比较方的屏幕 比如说 iphone4 */
+  @media (min-aspect-ratio: 3/5) and (min-width: 380px) {
+    .banner {
+      width: 60%;
+      height: 60%;
+      margin-top: 10%;
+    }
+  }
+  /* 宽高比比较方的屏幕 比如说 iphone4 Nexus4 */
 
   .stars_1 {
     position: absolute;
@@ -186,7 +193,7 @@ html {
       height: 67px;
     }
   }
-  @media (min-height: 650px) {
+  @media (min-height: 640px) {
     .start {
       transform: translate3d(0, 300px, 0);
     }
